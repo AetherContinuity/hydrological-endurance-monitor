@@ -10,9 +10,10 @@ FMI_BASE = 'https://opendata.fmi.fi/wfs'
 
 # Asemat: Lappeenranta toimii varmasti, muut kokeillaan
 FMI_STATIONS = [
-    ('101756', 'Lappeenranta Lepola'),   # toimii varmasti, pitkä historia
-    ('101928', 'Suonenjoki'),            # lähempänä mutta uudempi
-    ('101680', 'Kuopio Maaninka'),
+    ('101680', 'Kuopio Maaninka'),       # ~20km Iisvedestä, maaseutu ✓
+    ('101590', 'Kuopio Savilahti'),      # ~25km, kaupunkiasema
+    ('101928', 'Suonenjoki'),            # ~15km, uudempi asema
+    ('101756', 'Lappeenranta Lepola'),   # fallback, kaukana mutta pitkä historia
 ]
 
 def fetch_chunk(station, start, end):
@@ -89,3 +90,7 @@ except Exception as e:
     sys.exit(1)
 
 print('DONE')
+# Lisäinfo: Kuopio-asemien testaus
+# 101590 Kuopio Savilahti — kaupunkiasema
+# 101680 Kuopio Maaninka — maaseutuasema, ~20km Iisvedeltä pohjoiseen
+# 101928 Suonenjoki — ~15km Iisvedestä etelään, perustettu myöhemmin
