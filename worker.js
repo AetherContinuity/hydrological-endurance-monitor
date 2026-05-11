@@ -12,7 +12,7 @@ const CORS = {
   'Content-Type': 'application/json'
 };
 
-const SYKE_BASE = 'https://rajapinnat.ymparisto.fi/api/Hydrologiarajapinta/1.0/odata/Havainto';
+const SYKE_BASE = 'http://rajapinnat.ymparisto.fi/api/Hydrologiarajapinta/1.1/odata/Havainto';
 const FMI_BASE  = 'https://opendata.fmi.fi/wfs';
 
 export default {
