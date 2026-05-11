@@ -3,7 +3,7 @@ GET https://wwwi2.ymparisto.fi/i2/14/l147221001y/wqfi.html
   Ennustearvot: [97.49, 97.51, 97.52, 97.54, 97.59, 97.67, 97.91, 98.2, 98.46]
   Mediaani: 97.59 m
   Keskiennuste: 97.51 m
-  Huippuajankohta: 17.5.2026 -     23.5.2026
+  Huippuajankohta: 17.5.2026 -     24.5.2026
   MHW: 98.46 m (10.06.1988)
 OK: data/cache/iisvesi.json
 {
@@ -16,7 +16,7 @@ OK: data/cache/iisvesi.json
     98.46
   ],
   "forecast_central_m": 97.51,
-  "peak_timing": "17.5.2026 -     23.5.2026",
+  "peak_timing": "17.5.2026 -     24.5.2026",
   "mhw_m": 98.46,
   "mhw_date": "10.06.1988"
 }

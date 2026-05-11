@@ -1,13 +1,26 @@
-2026-05-11 18:25:54,190 INFO [2025-12-11T00:00:00] Please note that a dedicated catalogue entry for this dataset, post-processed and stored in Analysis Ready Cloud Optimized (ARCO) format (Zarr), is available for optimised time-series retrievals (i.e. for retrieving data from selected variables for a single point over an extended period of time in an efficient way). You can discover it [here](https://cds.climate.copernicus.eu/datasets/reanalysis-era5-land-timeseries?tab=overview)
-2026-05-11 18:25:54,191 INFO Request ID is 286e2307-e81a-48f7-a450-b9e3937ff2e6
-2026-05-11 18:25:54,321 INFO status has been updated to accepted
-2026-05-11 18:26:17,739 INFO status has been updated to successful
-ERA5: 2026-05 → data/era5_raw/era5_2026_05.nc
-3104a37eb0c0e83186c177a9cf2c882a.zip:   0%|          | 0.00/35.4k [00:00<?, ?B/s]3104a37eb0c0e83186c177a9cf2c882a.zip: 100%|██████████| 35.4k/35.4k [00:00<00:00, 62.9kB/s]                                                                                          Ladattu: 35 KB
+2026-05-11 21:30:01,530 INFO [2026-02-16T00:00:00] - To generate this ERA5-land hourly time series dataset, **homogenisation conventions have been applied to the ERA5 source GRIB data** to ensure consistency, usability, and alignment across chosen variables and time steps. The processed data were then written to an **ARCO Zarr archive**, enabling efficient cloud-optimised access and scalable data retrieval. Please refer to the [user guide](https://confluence.ecmwf.int/x/Dg32Hw) for details.
+
+- The dataset presented here is a subset of selected parameters from the full [CDS ERA5 hourly data on single levels (1940–present)](https://cds.climate.copernicus.eu/datasets/reanalysis-era5-land?tab=overview). **Requirements for additional parameters may be considered**. Please raise your request with ECMWF Support [here](https://jira.ecmwf.int/plugins/servlet/desk/portal/1/create/202).
+2026-05-11 21:30:01,530 INFO Request ID is 5bee57d6-48a7-41fa-adf9-96d1d58c5d82
+2026-05-11 21:30:01,718 INFO status has been updated to accepted
+2026-05-11 21:30:18,176 INFO status has been updated to failed
+2026-05-11 21:30:21,267 INFO [2025-12-11T00:00:00] Please note that a dedicated catalogue entry for this dataset, post-processed and stored in Analysis Ready Cloud Optimized (ARCO) format (Zarr), is available for optimised time-series retrievals (i.e. for retrieving data from selected variables for a single point over an extended period of time in an efficient way). You can discover it [here](https://cds.climate.copernicus.eu/datasets/reanalysis-era5-land-timeseries?tab=overview)
+2026-05-11 21:30:21,267 INFO Request ID is 507dbdbf-3416-4033-9953-791203758e6c
+2026-05-11 21:30:21,461 INFO status has been updated to accepted
+2026-05-11 21:30:44,606 INFO status has been updated to running
+2026-05-11 21:31:13,464 INFO status has been updated to successful
+ERA5 timeseries: 62.9°N 26.8°E · 2016–2026
+Haetaan Copernicuksesta...
+timeseries virhe: 400 Client Error: Bad Request for url: https://cds.climate.copernicus.eu/api/retrieve/v1/jobs/5bee57d6-48a7-41fa-adf9-96d1d58c5d82/results
+The job has failed
+The job failed with: MultiAdaptorNoDataError
+Kokeillaan tavallista ERA5-Land...
+e65c3b240cef89d3fd9b8c3147b0a29a.zip:   0%|          | 0.00/34.6k [00:00<?, ?B/s]e65c3b240cef89d3fd9b8c3147b0a29a.zip: 100%|██████████| 34.6k/34.6k [00:01<00:00, 34.2kB/s]                                                                                          Fallback ladattu: 35 KB
 Puretaan ZIP...
-  ZIP sisältää: ['data_0.nc']
-  Purettu: data/era5_raw/era5_2026_05_extracted.nc
-  Muuttujat: ['number', 'valid_time', 'latitude', 'longitude', 'expver', 't2m', 'tp']
+  Sisältää: ['data_0.nc']
+  Purettu: data/era5_raw/era5_timeseries_2016_2026_x.nc
+Muuttujat: ['number', 'valid_time', 'latitude', 'longitude', 'expver', 't2m', 'tp']
 Jäsennetty: 6 päivää
 OK: 6 päivää → data/cache/era5_daily.json
   2026-05-01 → 2026-05-06
+  Esim: {'date': '2026-05-06', 'temp_c': 15.59, 'precip_mm': 0.0}
