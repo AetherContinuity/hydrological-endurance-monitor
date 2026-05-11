@@ -8,7 +8,14 @@ END   = NOW.strftime('%Y-%m-%d')
 START = f"{NOW.year - 10}-{NOW.month:02d}-01"
 
 FMI_BASE    = 'https://opendata.fmi.fi/wfs'
-FMI_STATION = '101756'  # Lappeenranta Lepola
+# Asemat prioriteettijärjestyksessä — lähimpänä Iisvettä ensin
+FMI_STATIONS = [
+    ('101928', 'Suonenjoki'),       # ~15km Iisvedestä
+    ('101680', 'Kuopio Maaninka'),  # ~25km, maatalousasema
+    ('101590', 'Kuopio Savilahti'), # ~30km
+    ('101756', 'Lappeenranta'),     # fallback
+]
+FMI_STATION = FMI_STATIONS[0][0]   # Käytä ensisijaisesti Suonenjokea
 
 def fetch_fmi_chunk(start, end):
     """Hae yksi aikaikkuna FMI:stä"""
