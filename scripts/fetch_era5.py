@@ -60,8 +60,9 @@ try:
         print(f'  Muuttujat: {list(ds.variables.keys())}')
         t2m = next((v for v in ['t2m','VAR_2T'] if v in ds.variables), None)
         tp  = next((v for v in ['tp','VAR_TP']  if v in ds.variables), None)
-        times = ds.variables['time'][:]
-        units = ds.variables['time'].units
+        tv = 'valid_time' if 'valid_time' in ds.variables else 'time'
+        times = ds.variables[tv][:]
+        units = ds.variables[tv].units
         dates = [num2date(t, units).strftime('%Y-%m-%d') for t in times]
         t_vals = ds.variables[t2m][:].mean(axis=(-1,-2)) - 273.15 if t2m else []
         p_vals = ds.variables[tp][:].mean(axis=(-1,-2)) * 1000 if tp else []
