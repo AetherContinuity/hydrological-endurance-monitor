@@ -1,0 +1,45 @@
+name: Fetch ERA5-Land historical data
+
+on:
+  workflow_dispatch:    # Manuaalinen ajo — ei päivittäinen (data on staattinen)
+  schedule:
+    - cron: '0 3 1 * *'  # Kerran kuussa
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+jobs:
+  fetch-era5:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install cdsapi
+        run: pip install cdsapi netcdf4 numpy -q
+
+      - name: Configure CDS API
+        run: |
+          echo "url: https://cds.climate.copernicus.eu/api" > ~/.cdsapirc
+          echo "key: ${{ secrets.CDS_API_KEY }}" >> ~/.cdsapirc
+
+      - name: Fetch ERA5-Land (Saimaa area)
+        run: python scripts/fetch_era5.py 2>&1 | tee data/cache/era5_log.txt
+
+      - name: Commit ERA5 cache
+        run: |
+          git config user.name "ACI-HEM-bot"
+          git config user.email "action@github.com"
+          git add data/cache/
+          git diff --staged --quiet || git commit -m "auto: ERA5-Land cache päivitetty [skip ci]"
+          git push
