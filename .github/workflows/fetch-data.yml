@@ -26,7 +26,7 @@ jobs:
           python-version: '3.12'
 
       - name: Fetch SYKE + FMI data
-        run: python scripts/fetch_data.py 2>&1
+        run: python scripts/fetch_data.py 2>&1 | tee data/cache/fetch_log.txt
         continue-on-error: true
 
       - name: Show cache contents
