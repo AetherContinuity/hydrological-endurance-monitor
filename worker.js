@@ -12,7 +12,7 @@ const CORS = {
   'Content-Type': 'application/json'
 };
 
-const SYKE_BASE = 'http://rajapinnat.ymparisto.fi/api/Hydrologiarajapinta/1.1/odata/Havainto';
+const SYKE_BASE = 'https://rajapinnat.ymparisto.fi/api/Hydrologiarajapinta/1.1/odata/WaterLevelRegisters';
 const FMI_BASE  = 'https://opendata.fmi.fi/wfs';
 
 export default {
@@ -97,20 +97,19 @@ async function handleNve(env) {
 // ─── SYKE ────────────────────────────────────────────────────────
 
 async function handleSyke(params) {
-  const paikka = params.get('paikka') || '200';   // 200 = Lauritsala (Saimaa)
-  const suure  = params.get('suure')  || '1';     // 1=vedenkorkeus 2=virtaama 5=lumi
-  const start  = params.get('start')  || '2020-01-01';
-  const end    = params.get('end')    || new Date().toISOString().slice(0, 10);
-  const top    = params.get('top')    || '5000';
+  // LocationId muoto: '04.112.1.001' (Saimaa Lauritsala)
+  const locationId = params.get('location') || params.get('paikka') || '04.112.1.001';
+  const start      = params.get('start') || '2024-01-01';
+  const end        = params.get('end')   || new Date().toISOString().slice(0, 10);
+  const top        = params.get('top')   || '5000';
 
   const filter = [
-    `Paikka/PaikkaId eq ${paikka}`,
-    `Suure/SuureId eq ${suure}`,
-    `Aika ge datetime'${start}T00:00:00'`,
-    `Aika le datetime'${end}T23:59:59'`,
+    `LocationId eq '${locationId}'`,
+    `Timestamp ge ${start}T00:00:00Z`,
+    `Timestamp le ${end}T23:59:59Z`,
   ].join(' and ');
 
-  const sykeUrl = `${SYKE_BASE}?$filter=${encodeURIComponent(filter)}&$top=${top}&$format=json&$select=Aika,Arvo`;
+  const sykeUrl = `${SYKE_BASE}?$filter=${encodeURIComponent(filter)}&$orderby=Timestamp asc&$top=${top}&$format=json&$select=Timestamp,Wvalue`;
 
   const resp = await fetch(sykeUrl, { headers: { 'Accept': 'application/json' } });
 
@@ -119,19 +118,19 @@ async function handleSyke(params) {
     return new Response(JSON.stringify({
       error: `SYKE HTTP ${resp.status}`,
       url: sykeUrl,
-      detail: errText.slice(0, 200)
+      detail: errText.slice(0, 300)
     }), { status: 502, headers: CORS });
   }
 
   const data = await resp.json();
   const rows = (data.value || []).map(r => ({
-    date:  r.Aika?.slice(0, 10),
-    value: r.Arvo,
+    date:  r.Timestamp?.slice(0, 10),
+    value: r.Wvalue,
   }));
 
   return new Response(JSON.stringify({
-    source: 'SYKE Hydrologiarajapinta',
-    paikka, suure, start, end,
+    source: 'SYKE Hydrologiarajapinta 1.1',
+    locationId, start, end,
     n: rows.length,
     rows
   }), { headers: CORS });
@@ -150,21 +149,32 @@ async function handleSykePaikat() {
 // ─── FMI ────────────────────────────────────────────────────────
 
 async function handleFmi(params) {
-  const station = params.get('station') || '101756'; // Lappeenranta Lepola
+  const station = params.get('station') || '';
+  const place   = params.get('place')   || 'Lappeenranta';
   const param   = params.get('param')   || 'tday,rrday';
-  const start   = params.get('start')   || '2020-01-01';
+  const start   = params.get('start')   || '2024-01-01';
   const end     = params.get('end')     || new Date().toISOString().slice(0, 10);
+
+  // Käytä fmisid jos annettu, muuten place-parametria
+  const locationParam = station
+    ? `&fmisid=${station}`
+    : `&place=${encodeURIComponent(place)}`;
 
   const fmiUrl = `${FMI_BASE}?service=WFS&version=2.0.0&request=getFeature` +
     `&storedquery_id=fmi::observations::weather::daily::simple` +
-    `&fmisid=${station}` +
+    locationParam +
     `&parameters=${param}` +
     `&starttime=${start}T00:00:00Z` +
     `&endtime=${end}T23:59:59Z`;
 
   const resp = await fetch(fmiUrl);
   if (!resp.ok) {
-    return new Response(JSON.stringify({ error: `FMI HTTP ${resp.status}` }), { status: 502, headers: CORS });
+    const errText = await resp.text().catch(() => '');
+    return new Response(JSON.stringify({
+      error: `FMI HTTP ${resp.status}`,
+      url: fmiUrl,
+      detail: errText.slice(0, 300)
+    }), { status: 502, headers: CORS });
   }
 
   const xml  = await resp.text();
@@ -172,7 +182,7 @@ async function handleFmi(params) {
 
   return new Response(JSON.stringify({
     source: 'FMI WFS',
-    station, param, start, end,
+    station: station || place, param, start, end,
     n: rows.length,
     rows
   }), { headers: CORS });
