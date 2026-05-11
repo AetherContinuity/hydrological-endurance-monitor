@@ -2,8 +2,11 @@ name: Fetch HEM data (SYKE + FMI)
 
 on:
   schedule:
-    - cron: '0 5 * * *'   # päivittäin klo 5 UTC
-  workflow_dispatch:        # manuaalinen trigger
+    - cron: '0 5 * * *'
+  workflow_dispatch:
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 jobs:
   fetch:
@@ -20,6 +23,16 @@ jobs:
 
       - name: Fetch SYKE + FMI data
         run: python scripts/fetch_data.py
+        continue-on-error: true
+
+      - name: Show cache contents
+        run: |
+          echo "=== data/cache/ ==="
+          ls -la data/cache/ || echo "(empty)"
+          echo "=== syke.json preview ==="
+          cat data/cache/syke.json 2>/dev/null | head -c 500 || echo "(missing)"
+          echo "=== fmi.json preview ==="
+          cat data/cache/fmi.json 2>/dev/null | head -c 500 || echo "(missing)"
 
       - name: Commit cache
         run: |
