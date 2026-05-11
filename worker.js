@@ -178,6 +178,60 @@ async function handleFmi(params) {
   }), { headers: CORS });
 }
 
+// ─── Vesiraja API ────────────────────────────────────────────────
+
+const VESIRAJA_BASE = 'https://api.ymparisto.fi/vesiraja';
+
+async function handleVesiraja(url) {
+  const params = url.searchParams;
+  const sub = url.pathname.replace('/vesiraja', '').replace(/^\//, '');
+
+  let endpoint;
+
+  if (sub === 'stations') {
+    endpoint = `${VESIRAJA_BASE}/stations?api-version=1`;
+  } else if (sub === 'variables') {
+    endpoint = `${VESIRAJA_BASE}/variables?api-version=1`;
+  } else if (sub === 'statistics') {
+    const vc    = params.get('variable') || 'WaterLevel';
+    const start = params.get('start')    || '2025-01-01';
+    const end   = params.get('end')      || today();
+    const sc    = params.get('station')  || '';
+    let q = `api-version=1&VariableCode=${vc}&DateStart=${start}&DateEnd=${end}`;
+    if (sc) q += `&StationCode=${sc}`;
+    endpoint = `${VESIRAJA_BASE}/statistics/daily/json?${q}`;
+  } else {
+    // default: timeseries
+    const vc    = params.get('variable') || 'WaterLevel';
+    const start = params.get('start')    || '2025-01-01';
+    const end   = params.get('end')      || today();
+    const sc    = params.get('station')  || '';
+    let q = `api-version=1&VariableCode=${vc}&DateStart=${start}&DateEnd=${end}`;
+    if (sc) q += `&StationCode=${sc}`;
+    endpoint = `${VESIRAJA_BASE}/timeseries/json?${q}`;
+  }
+
+  const resp = await fetch(endpoint, {
+    headers: { 'Accept': 'application/json', 'User-Agent': 'ACI-HEM/1.1' }
+  });
+
+  if (!resp.ok) {
+    const errText = await resp.text().catch(() => '');
+    return new Response(JSON.stringify({
+      error: `Vesiraja HTTP ${resp.status}`,
+      url: endpoint,
+      detail: errText.slice(0, 300)
+    }), { status: 502, headers: CORS });
+  }
+
+  const data = await resp.json();
+  return new Response(JSON.stringify({
+    source: 'SYKE Vesiraja API',
+    endpoint,
+    data
+  }), { headers: CORS });
+}
+
 function parseFmiXml(xml) {
   const times  = [...xml.matchAll(/<BsWfs:Time>([^<]+)<\/BsWfs:Time>/g)].map(m => m[1].slice(0,10));
   const pnames = [...xml.matchAll(/<BsWfs:ParameterName>([^<]+)<\/BsWfs:ParameterName>/g)].map(m => m[1]);
