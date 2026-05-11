@@ -1,51 +1,6 @@
-SYKE: https://wwwi2.ymparisto.fi/i2/95/vesiA.html?tunnus=1403300&alku=2025-05-11&loppu=2026-05-11
-  bytes: 39440
-  <td>-soluja: 76
-  <tr>-rivejä: 50
-  <table>: 23
-  TD-solujen sisältö (50 ensimmäistä):
-    [1] '&nbsp;'
-    [2] 'Vesistömallijärjestelmä:&nbsp;Vesistöennusteet, automaattise'
-    [3] 'Tuntiennusteet vesistöalueittain: \n        Valitse vesist&ou'
-    [4] 'Vesitilannekartat: \n        Valitse vesitilannekartta\n      '
-    [5] 'Valunta'
-    [6] 'Vedenkorkeus'
-    [7] 'Pohjavesi'
-    [8] 'Lämpötila'
-    [9] 'Lumikuorma'
-    [10] 'J&auml;rvien ja jokien automaattiset vedenkorkeus-, virtaama'
-    [12] '&nbsp;14\nKymijoen vesistöalue'
-    [13] 'Vedenkorkeus: Puula / Ryökäsvesi-Liekune'
-    [15] 'ilmoitus ennustetusta säännöstelyrajan ylityksestä\n(säännöst'
-    [16] '&nbsp;'
-    [17] '&nbsp;44\nLapuanjoen vesistöalue'
-    [18] 'Vedenkorkeus: Kätkänjärvi'
-    [20] 'ilmoitus ennustetusta säännöstelyrajan ylityksestä'
-    [21] '&nbsp;'
-    [22] '&nbsp;68\nTenojoen vesistöalue'
-    [23] 'Vedenkorkeus: Inarijoki Karigasniemi'
-    [25] 'huomautus ennustetusta korkeasta vedenpinnasta'
-    [26] '&nbsp;'
-    [27] '&nbsp;71\nPaatsjoen vesistöalue'
-    [28] 'Vedenkorkeus: Solojärvi'
-    [30] 'huomautus ennustetusta korkeasta vedenpinnasta'
-    [31] 'Vedenkorkeus: Juutuanjoki'
-    [33] 'huomautus ennustetusta korkeasta vedenpinnasta'
-    [34] '&nbsp;'
-    [35] 'Huomautus korkeasta vedenpinnasta / suuresta virtaamasta,   '
-    [36] '&nbsp;'
-    [37] 'Varoitus korkeasta vedenpinnasta / suuresta      virtaamasta'
-    [38] '&nbsp;'
-    [39] 'Varoitus poikkeuksellisen korkeasta      vedenpinnasta / suu'
-    [40] '&nbsp;'
-    [41] 'Varoitus suuresta tulvasta, joka aiheuttaa      vakavia vahi'
-    [43] '&nbsp;'
-    [44] 'Ilmoitus s&auml;&auml;nn&ouml;stelyrajan ylityksest&auml;.'
-    [45] '&nbsp;'
-    [46] 'Huomautus tulvarajan tai virtaamarajan ylityksest&auml;.'
-    [47] '14\nKymijoen vesistöalue'
-    [49] 'Puula / Ryökäsvesi-Liekune (Telakkaniemi)'
-  JS-muuttujia: 0
-OK syke.json (debug-mode)
-OK fmi.json (730 rivejä)
-DONE
+SYKE hydra v1: https://rajapinnat.ymparisto.fi/api/hydra/v1/odata/WaterLevelRegisters
+  Sivu 0...
+  POST virhe: HTTP Error 404: Not Found
+SYKE: 0 riviä yhteensä
+OK syke.json (0 rivejä)
+FAIL FMI: HTTP Error 400: Bad Request
