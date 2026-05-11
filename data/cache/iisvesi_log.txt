@@ -1,4 +1,22 @@
 GET https://wwwi2.ymparisto.fi/i2/14/l147221001y/wqfi.html
-  OK: 34554b [text/html]
-  Preview: b'<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "https://www.w3.org/TR/html4/loose.dtd">\r\n<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">\r\n<link rel="stylesheet" href="/inc/css/ymparisto.css" type="text/css">\r\n\r\n<html lang="fi">\r\n<head>\r\n        <title>www.vesi.fi</'
-  Tallennettu: data/cache/iisvesi_wqfi.html
+  34554 bytes
+  Ennustearvot: [97.49, 97.51, 97.52, 97.54, 97.59, 97.67, 97.91, 98.2, 98.46]
+  Mediaani: 97.59 m
+  Keskiennuste: 97.51 m
+  Huippuajankohta: 17.5.2026 -     23.5.2026
+  MHW: 98.46 m (10.06.1988)
+OK: data/cache/iisvesi.json
+{
+  "source": "SYKE-WSFS-Iisvesi",
+  "url": "https://wwwi2.ymparisto.fi/i2/14/l147221001y/wqfi.html",
+  "fetched": "2026-05-11",
+  "forecast_m": 97.59,
+  "forecast_range": [
+    97.49,
+    98.46
+  ],
+  "forecast_central_m": 97.51,
+  "peak_timing": "17.5.2026 -     23.5.2026",
+  "mhw_m": 98.46,
+  "mhw_date": "10.06.1988"
+}

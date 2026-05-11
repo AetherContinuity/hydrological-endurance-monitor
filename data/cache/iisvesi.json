@@ -1,14 +1,11 @@
 {
   "source": "SYKE-WSFS-Iisvesi",
+  "url": "https://wwwi2.ymparisto.fi/i2/14/l147221001y/wqfi.html",
   "fetched": "2026-05-11",
-  "forecast_values_m": [
+  "forecast_m": 97.59,
+  "forecast_range": [
     97.49,
-    97.51,
-    97.52,
-    97.54,
-    97.59,
-    97.67,
-    97.91
+    98.46
   ],
   "forecast_central_m": 97.51,
   "peak_timing": "17.5.2026 -     23.5.2026",
