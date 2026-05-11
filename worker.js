@@ -139,11 +139,30 @@ async function handleSyke(params) {
 // ─── SYKE asemaluettelo ──────────────────────────────────────────
 
 async function handleSykePaikat() {
-  const filter = `substringof('Saimaa',Nimi) or substringof('Lauritsala',Nimi) or substringof('Virmasvesi',Nimi) or substringof('Puumala',Nimi)`;
-  const url = `https://rajapinnat.ymparisto.fi/api/Hydrologiarajapinta/1.0/odata/Paikka?$format=json&$top=50&$filter=${encodeURIComponent(filter)}`;
-  const resp = await fetch(url, { headers: { 'Accept': 'application/json' } });
-  const data = await resp.json();
-  return new Response(JSON.stringify(data), { headers: CORS });
+  // Hae OData-metadata — näyttää kaikki saatavilla olevat entiteetit
+  const metaUrl = 'https://rajapinnat.ymparisto.fi/api/Hydrologiarajapinta/1.1/odata/$metadata';
+  const rootUrl = 'https://rajapinnat.ymparisto.fi/api/Hydrologiarajapinta/1.1/odata/';
+
+  // Hae ensin juuridokumentti
+  const rootResp = await fetch(rootUrl, { headers: { 'Accept': 'application/json' } });
+  const rootText = await rootResp.text().catch(() => '');
+
+  // Sitten metadata
+  const metaResp = await fetch(metaUrl);
+  const metaText = await metaResp.text().catch(() => '');
+
+  // Poimii EntitySet-nimet XML-metadatasta
+  const entities = [...metaText.matchAll(/EntitySet Name="([^"]+)"/g)].map(m => m[1]);
+  const entityTypes = [...metaText.matchAll(/EntityType Name="([^"]+)"/g)].map(m => m[1]);
+
+  return new Response(JSON.stringify({
+    root_status: rootResp.status,
+    root_preview: rootText.slice(0, 500),
+    meta_status: metaResp.status,
+    entities,
+    entityTypes,
+    meta_preview: metaText.slice(0, 1000)
+  }), { headers: CORS });
 }
 
 // ─── FMI ────────────────────────────────────────────────────────
