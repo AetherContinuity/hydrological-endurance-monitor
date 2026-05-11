@@ -1,119 +1,92 @@
-"""ERA5-Land timeseries fetcher — ARCO-formaatti yhdelle pisteelle"""
+"""ERA5-Land: hakee yhden kuukauden per ajo, akkumuloi cacheen"""
 import cdsapi, json, os, sys, zipfile
 from datetime import datetime, timezone
 
 NOW = datetime.now(timezone.utc)
+YEAR  = str(NOW.year)
+MONTH = f'{NOW.month:02d}'
+
 os.makedirs('data/cache', exist_ok=True)
 os.makedirs('data/era5_raw', exist_ok=True)
 
-# Iisvesi/Virmasvesi koordinaatit (lähimpänä gridipiste)
-LAT, LON = 62.9, 26.8
-YEARS = list(range(2016, NOW.year + 1))
+# Iisvesi/Virmasvesi alue (pieni bbox)
+AREA = [63.2, 26.5, 62.5, 27.2]
 
-print(f'ERA5 timeseries: {LAT}°N {LON}°E · {YEARS[0]}–{YEARS[-1]}')
+print(f'ERA5: {YEAR}-{MONTH} → area {AREA}')
 
 c = cdsapi.Client()
-nc_file = f'data/era5_raw/era5_timeseries_{YEARS[0]}_{YEARS[-1]}.nc'
+nc_file = f'data/era5_raw/era5_{YEAR}_{MONTH}.nc'
 
-if not os.path.exists(nc_file):
-    print('Haetaan Copernicuksesta...')
+if os.path.exists(nc_file.replace('.nc','_x.nc')):
+    print('Tiedosto jo olemassa, ohitetaan haku')
+    nc_file = nc_file.replace('.nc','_x.nc')
+else:
     try:
         c.retrieve(
-            'reanalysis-era5-land-timeseries',
+            'reanalysis-era5-land',
             {
                 'variable': ['2m_temperature', 'total_precipitation'],
-                'year': [str(y) for y in YEARS],
-                'month': [f'{m:02d}' for m in range(1, 13)],
-                'day': [f'{d:02d}' for d in range(1, 32)],
+                'year': YEAR, 'month': [MONTH],
+                'day': [f'{d:02d}' for d in range(1,32)],
                 'time': ['12:00'],
-                'location': {'lon': LON, 'lat': LAT},
+                'area': AREA,
                 'format': 'netcdf',
             },
             nc_file
         )
         print(f'Ladattu: {os.path.getsize(nc_file)/1024:.0f} KB')
     except Exception as e:
-        print(f'timeseries virhe: {e}')
-        print('Kokeillaan tavallista ERA5-Land...')
-        # Fallback: tavallinen ERA5-Land kuukausittain
-        c.retrieve(
-            'reanalysis-era5-land',
-            {
-                'variable': ['2m_temperature', 'total_precipitation'],
-                'year': [str(NOW.year)],
-                'month': [f'{NOW.month:02d}'],
-                'day': [f'{d:02d}' for d in range(1, 32)],
-                'time': ['12:00'],
-                'area': [LAT+0.5, LON-0.5, LAT-0.5, LON+0.5],
-                'format': 'netcdf',
-            },
-            nc_file
-        )
-        print(f'Fallback ladattu: {os.path.getsize(nc_file)/1024:.0f} KB')
+        print(f'ERA5 virhe: {e}')
+        sys.exit(1)
 
-# Pura ZIP jos tarpeen
-actual = nc_file
-if zipfile.is_zipfile(nc_file):
-    print('Puretaan ZIP...')
-    with zipfile.ZipFile(nc_file) as z:
-        names = z.namelist()
-        print(f'  Sisältää: {names}')
-        nc_name = next((n for n in names if n.endswith('.nc')), None)
-        if nc_name:
-            actual = nc_file.replace('.nc', '_x.nc')
-            with z.open(nc_name) as src, open(actual, 'wb') as dst:
-                dst.write(src.read())
-            print(f'  Purettu: {actual}')
+    if zipfile.is_zipfile(nc_file):
+        with zipfile.ZipFile(nc_file) as z:
+            nc_name = next((n for n in z.namelist() if n.endswith('.nc')), None)
+            if nc_name:
+                xf = nc_file.replace('.nc','_x.nc')
+                with z.open(nc_name) as s, open(xf,'wb') as d: d.write(s.read())
+                nc_file = xf
+                print(f'Purettu: {nc_file}')
 
 # Lue NetCDF
 results = []
 try:
     from netCDF4 import Dataset, num2date
-    import numpy as np
-    with Dataset(actual) as ds:
-        print(f'Muuttujat: {list(ds.variables.keys())}')
+    with Dataset(nc_file) as ds:
         tv = 'valid_time' if 'valid_time' in ds.variables else 'time'
-        t2m_v = next((v for v in ['t2m','VAR_2T'] if v in ds.variables), None)
-        tp_v  = next((v for v in ['tp','VAR_TP']  if v in ds.variables), None)
+        t2m = next((v for v in ['t2m','VAR_2T'] if v in ds.variables), None)
+        tp  = next((v for v in ['tp','VAR_TP']  if v in ds.variables), None)
         times = ds.variables[tv][:]
         units = ds.variables[tv].units
         dates = [num2date(t, units).strftime('%Y-%m-%d') for t in times]
-
-        # Timeseries on 1D (ei grid), tavallinen on 3D
-        def flatten(arr):
-            a = np.array(arr)
-            return a.flatten() if a.ndim > 1 else a
-
-        t_vals = flatten(ds.variables[t2m_v][:]) - 273.15 if t2m_v else []
-        p_vals = flatten(ds.variables[tp_v][:]) * 1000    if tp_v  else []
-
+        import numpy as np
+        t_v = ds.variables[t2m][:].mean(axis=(-1,-2)) - 273.15 if t2m else []
+        p_v = ds.variables[tp][:].mean(axis=(-1,-2)) * 1000    if tp  else []
         for i, date in enumerate(dates):
             results.append({
-                'date':     date,
-                'temp_c':   round(float(t_vals[i]), 2) if i < len(t_vals) else None,
-                'precip_mm':round(float(p_vals[i]) * 24, 2) if i < len(p_vals) else None,
+                'date': date,
+                'temp_c':    round(float(t_v[i]), 2) if i < len(t_v) else None,
+                'precip_mm': round(float(p_v[i])*24, 2) if i < len(p_v) else None,
             })
     print(f'Jäsennetty: {len(results)} päivää')
 except Exception as e:
     print(f'NetCDF virhe: {e}')
     sys.exit(1)
 
-# Tallenna
-seen = set()
-unique = [r for r in sorted(results, key=lambda x: x['date'])
-          if r['date'] not in seen and not seen.add(r['date'])]
+# Lue olemassa oleva cache ja yhdistä
+existing = []
+cache = 'data/cache/era5_daily.json'
+if os.path.exists(cache):
+    with open(cache) as f:
+        existing = json.load(f).get('rows', [])
 
-output = {
-    'source': 'ERA5-Land ECMWF',
-    'lat': LAT, 'lon': LON,
-    'fetched': NOW.strftime('%Y-%m-%d'),
-    'n': len(unique),
-    'rows': unique
-}
-with open('data/cache/era5_daily.json', 'w') as f:
-    json.dump(output, f)
+by_date = {r['date']: r for r in existing}
+for r in results:
+    by_date[r['date']] = r
+merged = sorted(by_date.values(), key=lambda x: x['date'])
 
-print(f'OK: {len(unique)} päivää → data/cache/era5_daily.json')
-if unique:
-    print(f'  {unique[0]["date"]} → {unique[-1]["date"]}')
-    print(f'  Esim: {unique[-1]}')
+with open(cache, 'w') as f:
+    json.dump({'source':'ERA5-Land','area':AREA,'fetched':NOW.strftime('%Y-%m-%d'),
+               'n':len(merged),'rows':merged}, f)
+
+print(f'OK: {len(merged)} päivää cachessa ({merged[0]["date"] if merged else "—"} → {merged[-1]["date"] if merged else "—"})')
