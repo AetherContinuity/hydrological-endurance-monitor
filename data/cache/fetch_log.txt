@@ -1,5 +1,15 @@
-SYKE: ei manuaalista CSV:tä (data/cache/water_level.csv)
-FMI: https://opendata.fmi.fi/wfs?service=WFS&version=2.0.0&request=getFeature&storedquery_id=fmi::observations::weather::dail
-FMI: 730 rivejä (2025-05-11 → 2026-05-11)
-OK fmi.json (730 rivejä)
+  FMI: 2016-05-01 → 2018-05-01
+    FAIL: HTTP Error 400: Bad Request
+  FMI: 2018-05-02 → 2020-05-01
+    FAIL: HTTP Error 400: Bad Request
+  FMI: 2020-05-02 → 2022-05-02
+    FAIL: HTTP Error 400: Bad Request
+  FMI: 2022-05-03 → 2024-05-02
+    FAIL: HTTP Error 400: Bad Request
+  FMI: 2024-05-03 → 2026-05-03
+    FAIL: HTTP Error 400: Bad Request
+  FMI: 2026-05-04 → 2026-05-11
+    +14 riviä
+FMI yhteensä: 14 riviä (2016-05-01 → 2026-05-11)
+OK fmi.json (14 riviä)
 DONE
