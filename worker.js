@@ -30,6 +30,9 @@ export default {
       if (url.pathname === '/syke/paikat') {
         return await handleSykePaikat();
       }
+      if (url.pathname === '/syke/csv') {
+        return await handleSykeCSV(url.searchParams);
+      }
       if (url.pathname === '/fmi' || url.pathname === '/fmi/') {
         return await handleFmi(url.searchParams);
       }
@@ -270,4 +273,44 @@ function parseFmiXml(xml) {
     param: pnames[i],
     value: isNaN(values[i]) ? null : values[i]
   }));
+}
+
+// ─── SYKE wwwi2 CSV ──────────────────────────────────────────────
+
+async function handleSykeCSV(params) {
+  const tunnus = params.get('tunnus') || '0411200'; // Lauritsala default
+  const start  = params.get('start')  || '2024-01-01';
+  const end    = params.get('end')    || new Date().toISOString().slice(0,10);
+
+  const csvUrl = `https://wwwi2.ymparisto.fi/i2/95/vesiA.html?tunnus=${tunnus}&alku=${start}&loppu=${end}&type=csv`;
+
+  const resp = await fetch(csvUrl, {
+    headers: { 'User-Agent': 'ACI-HEM/1.1', 'Accept': 'text/csv,text/plain,*/*' }
+  });
+
+  if (!resp.ok) {
+    const errText = await resp.text().catch(() => '');
+    return new Response(JSON.stringify({
+      error: `SYKE wwwi2 HTTP ${resp.status}`,
+      url: csvUrl,
+      detail: errText.slice(0, 300)
+    }), { status: 502, headers: CORS });
+  }
+
+  const csv = await resp.text();
+  const lines = csv.trim().split('\n').filter(l => l.trim());
+  const rows = [];
+  for (const line of lines.slice(1)) {
+    const parts = line.split(/[;,\t]/);
+    if (parts.length >= 2) {
+      rows.push({ date: parts[0]?.trim(), value: parseFloat(parts[1]) });
+    }
+  }
+
+  return new Response(JSON.stringify({
+    source: 'SYKE wwwi2', tunnus, start, end,
+    n: rows.length,
+    csv_preview: csv.slice(0, 400),
+    rows: rows.slice(0, 10)
+  }), { headers: CORS });
 }
