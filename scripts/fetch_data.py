@@ -1,52 +1,88 @@
-"""HEM data fetcher — debug HTML rakenne"""
-import json, sys, re, os, urllib.request
+"""HEM data fetcher — SYKE hydra v1 OData (POST) + FMI"""
+import json, sys, re, os, urllib.request, urllib.error
 from datetime import datetime, timedelta, timezone
 
 NOW   = datetime.now(timezone.utc)
 END   = NOW.strftime('%Y-%m-%d')
-START = (NOW - timedelta(days=365)).strftime('%Y-%m-%d')
+START = (NOW - timedelta(days=400)).strftime('%Y-%m-%d')
 
+SYKE_URL    = 'https://rajapinnat.ymparisto.fi/api/hydra/v1/odata/WaterLevelRegisters'
+SYKE_LOC    = '14.722.1.001'   # Virmasvesi/Iisvesi
 FMI_BASE    = 'https://opendata.fmi.fi/wfs'
-FMI_STATION = '101756'
-SYKE_TUNNUS = '1403300'
+FMI_STATION = '101756'         # Lappeenranta Lepola
+
+def post_json(url, data):
+    body = json.dumps(data).encode('utf-8')
+    req = urllib.request.Request(url, data=body, headers={
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'User-Agent': 'ACI-HEM/1.1'
+    })
+    with urllib.request.urlopen(req, timeout=30) as r:
+        return json.loads(r.read())
 
 def fetch_syke():
-    url = (f'https://wwwi2.ymparisto.fi/i2/95/vesiA.html'
-           f'?tunnus={SYKE_TUNNUS}&alku={START}&loppu={END}')
-    print(f'SYKE: {url}')
-    req = urllib.request.Request(url, headers={
-        'User-Agent': 'Mozilla/5.0',
-        'Accept': 'text/html,*/*'
-    })
-    with urllib.request.urlopen(req, timeout=20) as r:
-        raw = r.read()
+    print(f'SYKE hydra v1: {SYKE_URL}')
+    all_rows = []
+    params = {
+        'filter': f"LocationId eq '{SYKE_LOC}' and Timestamp ge {START}T00:00:00Z and Timestamp le {END}T23:59:59Z",
+        'orderby': 'Timestamp asc',
+    }
 
-    html = raw.decode('utf-8', 'replace')
+    page = 0
+    while True:
+        print(f'  Sivu {page}...')
+        try:
+            resp = post_json(SYKE_URL, params)
+        except Exception as e:
+            print(f'  POST virhe: {e}')
+            break
 
-    # Tallenna raaka HTML debuggausta varten
-    with open('data/cache/syke_debug.html', 'w') as f:
-        f.write(html)
+        print(f'  Avaimet: {list(resp.keys())}')
 
-    # Tutki rakennetta
-    print(f'  bytes: {len(raw)}')
-    print(f'  <td>-soluja: {len(re.findall("<td", html, re.I))}')
-    print(f'  <tr>-rivejä: {len(re.findall("<tr", html, re.I))}')
-    print(f'  <table>: {len(re.findall("<table", html, re.I))}')
+        values = resp.get('value', [])
+        if not values:
+            print(f'  Tyhjä vastaus: {str(resp)[:300]}')
+            break
 
-    # Etsi kaikki numerosekvenssit taulukon sisällä
-    all_cells = re.findall(r'<td[^>]*>(.*?)</td>', html, re.I|re.S)
-    clean = [re.sub(r'<[^>]+>','',c).strip() for c in all_cells]
-    print(f'  TD-solujen sisältö (50 ensimmäistä):')
-    for i, c in enumerate(clean[:50]):
-        if c: print(f'    [{i}] {repr(c[:60])}')
+        if page == 0 and values:
+            print(f'  Esimerkki: {values[0]}')
 
-    # Etsi JavaScript-muuttujia
-    js_vars = re.findall(r'var\s+\w+\s*=\s*[\[\{].*?[\]\}]', html, re.S)
-    print(f'  JS-muuttujia: {len(js_vars)}')
-    for v in js_vars[:3]:
-        print(f'    {v[:150]}')
+        all_rows.extend(values)
+        print(f'  +{len(values)} riviä (yhteensä {len(all_rows)})')
 
-    return {'source':'SYKE-wwwi2','n':0,'rows':[],'fetched':END}
+        next_link = resp.get('@odata.nextLink')
+        if not next_link:
+            break
+
+        # Seuraa nextLink-sivutusta
+        skip_m = re.search(r'\$skip=(\d+)', next_link)
+        if skip_m:
+            params = {'$skip': int(skip_m.group(1))}
+        else:
+            break
+        page += 1
+        if page > 20:  # Turvaraja
+            break
+
+    print(f'SYKE: {len(all_rows)} riviä yhteensä')
+
+    # Normalisoi
+    rows = []
+    for v in all_rows:
+        ts  = v.get('Timestamp','')[:10]
+        val = v.get('Wvalue')
+        if ts and val is not None:
+            rows.append({'date': ts, 'value': val})
+
+    if rows:
+        vals = [r['value'] for r in rows]
+        print(f'  min={min(vals)} max={max(vals)} (tarkista yksikkö: cm/mm/m?)')
+        print(f'  ensimmäinen: {rows[0]}')
+        print(f'  viimeisin:   {rows[-1]}')
+
+    return {'source':'SYKE-hydra-v1','location':SYKE_LOC,
+            'fetched':END,'n':len(rows),'rows':rows}
 
 def fetch_fmi():
     url = (f"{FMI_BASE}?service=WFS&version=2.0.0&request=getFeature"
@@ -62,6 +98,7 @@ def fetch_fmi():
     rows   = [{'date':times[i],'param':pnames[i],
                'value':None if values[i] in ('NaN','') else float(values[i])}
               for i in range(len(times))]
+    print(f'FMI: {len(rows)} rivejä')
     return {'source':'FMI','station':FMI_STATION,'fetched':END,'n':len(rows),'rows':rows}
 
 os.makedirs('data/cache', exist_ok=True)
@@ -70,7 +107,7 @@ errors = []
 try:
     syke = fetch_syke()
     with open('data/cache/syke.json','w') as f: json.dump(syke, f)
-    print(f'OK syke.json (debug-mode)')
+    print(f'OK syke.json ({syke["n"]} rivejä)')
 except Exception as e:
     print(f'FAIL SYKE: {e}')
     errors.append(str(e))
