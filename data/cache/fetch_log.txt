@@ -1,6 +1,16 @@
-SYKE url: https://rajapinnat.ymparisto.fi/api/Hydrologiarajapinta/1.0/Havainto?Tunniste=1403300&Suure=Vedenkorkeus&alkupvm=2025-05-11&loppupvm=2026-05-11
-FAIL SYKE: HTTP Error 404: Not Found
-FMI url: https://opendata.fmi.fi/wfs?service=WFS&version=2.0.0&request=getFeature&storedquery_id=fmi::observations::weather::dail
-FMI: 730 rivejä
-OK fmi.json (730 rivejä)
-ERRORS: ['HTTP Error 404: Not Found']
+=== SYKE asematunnisteiden testaus ===
+  1403300: HTTP Error 404: Not Found
+  1900: HTTP Error 404: Not Found
+  1901: HTTP Error 404: Not Found
+  0411200: HTTP Error 404: Not Found
+  1898: HTTP Error 404: Not Found
+  1889: HTTP Error 404: Not Found
+  1851: HTTP Error 404: Not Found
+
+=== Ilman Suure-rajausta ===
+  1403300 (no suure): HTTP Error 404: Not Found
+  1900 (no suure): HTTP Error 404: Not Found
+
+✗ Ei toimivaa tunnusta löydetty
+OK fmi.json (60 rivejä)
+DONE
