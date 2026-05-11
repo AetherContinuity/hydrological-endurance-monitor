@@ -1,12 +1,6 @@
-SYKE url: https://rajapinnat.ymparisto.fi/api/Hydrologiarajapinta/1.1/odata/WaterLevelRegisters?$filter=LocationId%20eq%20%2704.252.1.001%27%20and%20Timestamp%2
+SYKE url: https://rajapinnat.ymparisto.fi/api/Hydrologiarajapinta/1.0/Havainto?Tunniste=1403300&Suure=Vedenkorkeus&alkupvm=2025-05-11&loppupvm=2026-05-11
 FAIL SYKE: HTTP Error 404: Not Found
-FMI url: https://opendata.fmi.fi/wfs?service=WFS&version=2.0.0&request=getFeature&storedquery_id=fmi::observations::weather::daily::simple&fmisid=101756&parame
-FMI bytes: 449226, preview: <?xml version="1.0" encoding="UTF-8"?>
-<wfs:FeatureCollection
-  timeStamp="2026-05-11T12:00:21Z"
-  numberReturned="730"
-  numberMatched="730"
-      xm
-FMI: 730 riveja
-OK fmi.json
-ERRORS: ['SYKE: HTTP Error 404: Not Found']
+FMI url: https://opendata.fmi.fi/wfs?service=WFS&version=2.0.0&request=getFeature&storedquery_id=fmi::observations::weather::dail
+FMI: 730 rivejä
+OK fmi.json (730 rivejä)
+ERRORS: ['HTTP Error 404: Not Found']
