@@ -1,0 +1,22 @@
+/home/runner/work/hydrological-endurance-monitor/hydrological-endurance-monitor/scripts/fetch_data.py:5: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  END   = datetime.utcnow().strftime('%Y-%m-%d')
+/home/runner/work/hydrological-endurance-monitor/hydrological-endurance-monitor/scripts/fetch_data.py:6: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  START = (datetime.utcnow() - timedelta(days=400)).strftime('%Y-%m-%d')
+
+[notice] A new release of pip is available: 26.0.1 -> 26.1.1
+[notice] To update, run: pip install --upgrade pip
+SYKE params: {'$filter': "LocationId eq '04.252.1.001' and Timestamp ge 2025-04-06T00:00:00Z and Timestamp le 2026-05-11T23:59:59Z", '$orderby': 'Timestamp asc', '$top': 5000, '$format': 'json'}
+SYKE status: 404
+SYKE url: https://rajapinnat.ymparisto.fi/api/Hydrologiarajapinta/1.1/odata/WaterLevelRegisters?%24filter=LocationId+eq+%2704.252.1.001%27+and+Timestamp+ge+2025-04-06T00%3A00%3A00Z+and+Timestamp+le+2026-05-11T23%3A59%3A59Z&%24orderby=Timestamp+asc&%24top=5000&%24format=json
+SYKE body[0:400]: <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1"/>
+<title>404 - File or directory not found.</title>
+<style type="text/css">
+<!--
+body{margin:0;font-size:.7em;font-family:Verdana, Arial, Helvetica, sans-serif;
+FAIL SYKE: 404 Client Error: Not Found for url: https://rajapinnat.ymparisto.fi/api/Hydrologiarajapinta/1.1/odata/WaterLevelRegisters?%24filter=LocationId+eq+%2704.252.1.001%27+and+Timestamp+ge+2025-04-06T00%3A00%3A00Z+and+Timestamp+le+2026-05-11T23%3A59%3A59Z&%24orderby=Timestamp+asc&%24top=5000&%24format=json
+FMI status: 400
+FAIL FMI: 400 Client Error: Bad Request for url: https://opendata.fmi.fi/wfs?service=WFS&version=2.0.0&request=getFeature&storedquery_id=fmi%3A%3Aobservations%3A%3Aweather%3A%3Adaily%3A%3Asimple&fmisid=101756&parameters=tday%2Crrday&starttime=2025-04-06T00%3A00%3A00Z&endtime=2026-05-11T23%3A59%3A59Z
+ERRORS: ['SYKE: 404 Client Error: Not Found for url: https://rajapinnat.ymparisto.fi/api/Hydrologiarajapinta/1.1/odata/WaterLevelRegisters?%24filter=LocationId+eq+%2704.252.1.001%27+and+Timestamp+ge+2025-04-06T00%3A00%3A00Z+and+Timestamp+le+2026-05-11T23%3A59%3A59Z&%24orderby=Timestamp+asc&%24top=5000&%24format=json', 'FMI: 400 Client Error: Bad Request for url: https://opendata.fmi.fi/wfs?service=WFS&version=2.0.0&request=getFeature&storedquery_id=fmi%3A%3Aobservations%3A%3Aweather%3A%3Adaily%3A%3Asimple&fmisid=101756&parameters=tday%2Crrday&starttime=2025-04-06T00%3A00%3A00Z&endtime=2026-05-11T23%3A59%3A59Z']
