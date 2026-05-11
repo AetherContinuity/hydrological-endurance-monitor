@@ -1,29 +1,16 @@
-Kokeillaan: Kuopio Maaninka (101680)
-  Virhe: HTTP Error 400: Bad Request
-Kokeillaan: Kuopio Savilahti (101590)
-  Toimii: 60 riviä viimeiseltä kuulta
-  2016: 2016-01-01 → 2016-12-31
-    +732 riviä
-  2017: 2017-01-01 → 2017-12-31
-    +730 riviä
-  2018: 2018-01-01 → 2018-12-31
-    +730 riviä
-  2019: 2019-01-01 → 2019-12-31
-    +730 riviä
-  2020: 2020-01-01 → 2020-12-31
-    +732 riviä
-  2021: 2021-01-01 → 2021-12-31
-    +730 riviä
-  2022: 2022-01-01 → 2022-12-31
-    +730 riviä
-  2023: 2023-01-01 → 2023-12-31
-    +730 riviä
-  2024: 2024-01-01 → 2024-12-31
-    +732 riviä
-  2025: 2025-01-01 → 2025-12-31
-    +730 riviä
-  2026: 2026-01-01 → 2026-05-11
-    +260 riviä
-FMI Kuopio Savilahti: 7566 riviä (2016 → 2026)
-OK fmi.json (7566 riviä)
+FMI place=Kuopio 10 vuotta (2016-2026)
+  Testi: Kuopio: 22 riviä, tday=11/11
+  2016: +732 riviä (tday=366)
+  2017: +730 riviä (tday=365)
+  2018: +730 riviä (tday=365)
+  2019: +730 riviä (tday=365)
+  2020: +732 riviä (tday=366)
+  2021: +730 riviä (tday=365)
+  2022: +730 riviä (tday=365)
+  2023: +730 riviä (tday=365)
+  2024: +732 riviä (tday=366)
+  2025: +730 riviä (tday=365)
+  2026: +262 riviä (tday=131)
+FMI Kuopio: 7568 riviä
+OK fmi.json (7568 riviä · Kuopio)
 DONE
