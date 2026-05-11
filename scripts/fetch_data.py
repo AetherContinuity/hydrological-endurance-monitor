@@ -9,7 +9,7 @@ END   = datetime.utcnow().strftime('%Y-%m-%d')
 START = (datetime.utcnow() - timedelta(days=400)).strftime('%Y-%m-%d')
 
 SYKE_BASE     = 'https://rajapinnat.ymparisto.fi/api/Hydrologiarajapinta/1.1/odata/WaterLevelRegisters'
-SYKE_LOCATION = '04.112.1.001'
+SYKE_LOCATION = '04.252.1.001'  # Virmasvesi — DeepSeekin testattu
 FMI_BASE      = 'https://opendata.fmi.fi/wfs'
 FMI_STATION   = '101756'
 
