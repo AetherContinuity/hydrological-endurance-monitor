@@ -1,0 +1,14 @@
+basins:
+  - saimaa
+
+weights:
+  SD: 0.40
+  HSP: 0.35
+  RF: 0.25
+
+threshold:
+  alert: 0.6
+
+time:
+  start: "2020-01-01"
+  end: "2026-04-30"
