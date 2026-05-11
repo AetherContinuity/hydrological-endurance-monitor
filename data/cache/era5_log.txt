@@ -1,0 +1,9 @@
+2026-05-11 17:04:02,796 INFO [2025-12-11T00:00:00] Please note that a dedicated catalogue entry for this dataset, post-processed and stored in Analysis Ready Cloud Optimized (ARCO) format (Zarr), is available for optimised time-series retrievals (i.e. for retrieving data from selected variables for a single point over an extended period of time in an efficient way). You can discover it [here](https://cds.climate.copernicus.eu/datasets/reanalysis-era5-land-timeseries?tab=overview)
+2026-05-11 17:04:02,796 INFO Request ID is bdef983d-cdfb-4ca0-afa0-b122e0907736
+2026-05-11 17:04:02,946 INFO status has been updated to accepted
+2026-05-11 17:04:18,842 INFO status has been updated to running
+2026-05-11 17:04:38,093 INFO status has been updated to successful
+ERA5: 2026-05 → data/era5_raw/era5_2026_05.nc
+3104a37eb0c0e83186c177a9cf2c882a.zip:   0%|          | 0.00/35.4k [00:00<?, ?B/s]3104a37eb0c0e83186c177a9cf2c882a.zip: 100%|██████████| 35.4k/35.4k [00:00<00:00, 53.7kB/s]                                                                                          Ladattu: 35 KB
+NetCDF virhe: [Errno -51] NetCDF: Unknown file format: 'data/era5_raw/era5_2026_05.nc'
+OK: 0 päivää → data/cache/era5_daily.json
