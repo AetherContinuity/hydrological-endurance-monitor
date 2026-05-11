@@ -1,6 +1,5 @@
-SYKE hydra v1: https://rajapinnat.ymparisto.fi/api/hydra/v1/odata/WaterLevelRegisters
-  Sivu 0...
-  POST virhe: HTTP Error 404: Not Found
-SYKE: 0 riviä yhteensä
-OK syke.json (0 rivejä)
-FAIL FMI: HTTP Error 400: Bad Request
+SYKE: ei manuaalista CSV:tä (data/cache/water_level.csv)
+FMI: https://opendata.fmi.fi/wfs?service=WFS&version=2.0.0&request=getFeature&storedquery_id=fmi::observations::weather::dail
+FMI: 730 rivejä (2025-05-11 → 2026-05-11)
+OK fmi.json (730 rivejä)
+DONE
