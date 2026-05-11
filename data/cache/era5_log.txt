@@ -1,12 +1,14 @@
-2026-05-11 17:16:42,450 INFO [2025-12-11T00:00:00] Please note that a dedicated catalogue entry for this dataset, post-processed and stored in Analysis Ready Cloud Optimized (ARCO) format (Zarr), is available for optimised time-series retrievals (i.e. for retrieving data from selected variables for a single point over an extended period of time in an efficient way). You can discover it [here](https://cds.climate.copernicus.eu/datasets/reanalysis-era5-land-timeseries?tab=overview)
-2026-05-11 17:16:42,450 INFO Request ID is 79fad8c2-0b29-4b09-a2d6-90f6844511ab
-2026-05-11 17:16:43,505 INFO status has been updated to accepted
-2026-05-11 17:17:06,390 INFO status has been updated to successful
+2026-05-11 17:24:29,089 INFO [2025-12-11T00:00:00] Please note that a dedicated catalogue entry for this dataset, post-processed and stored in Analysis Ready Cloud Optimized (ARCO) format (Zarr), is available for optimised time-series retrievals (i.e. for retrieving data from selected variables for a single point over an extended period of time in an efficient way). You can discover it [here](https://cds.climate.copernicus.eu/datasets/reanalysis-era5-land-timeseries?tab=overview)
+2026-05-11 17:24:29,090 INFO Request ID is 7bdb9cbe-fe2f-439f-a63a-eb955449bf77
+2026-05-11 17:24:29,254 INFO status has been updated to accepted
+2026-05-11 17:24:40,425 INFO status has been updated to running
+2026-05-11 17:24:45,633 INFO status has been updated to successful
 ERA5: 2026-05 → data/era5_raw/era5_2026_05.nc
-3104a37eb0c0e83186c177a9cf2c882a.zip:   0%|          | 0.00/35.4k [00:00<?, ?B/s]3104a37eb0c0e83186c177a9cf2c882a.zip: 100%|██████████| 35.4k/35.4k [00:00<00:00, 65.1kB/s]                                                                                          Ladattu: 35 KB
+3104a37eb0c0e83186c177a9cf2c882a.zip:   0%|          | 0.00/35.4k [00:00<?, ?B/s]3104a37eb0c0e83186c177a9cf2c882a.zip: 100%|██████████| 35.4k/35.4k [00:00<00:00, 58.5kB/s]                                                                                          Ladattu: 35 KB
 Puretaan ZIP...
   ZIP sisältää: ['data_0.nc']
   Purettu: data/era5_raw/era5_2026_05_extracted.nc
   Muuttujat: ['number', 'valid_time', 'latitude', 'longitude', 'expver', 't2m', 'tp']
-NetCDF virhe: 'time'
-OK: 0 päivää → data/cache/era5_daily.json
+Jäsennetty: 6 päivää
+OK: 6 päivää → data/cache/era5_daily.json
+  2026-05-01 → 2026-05-06
