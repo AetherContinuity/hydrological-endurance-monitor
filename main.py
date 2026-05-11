@@ -2,17 +2,14 @@
 HEM v1.1 — Hydrological Endurance Monitor
 Main entry point.
 
-Usage:
-    python main.py
-
-Outputs:
-    reports/figures/hepp.png
-    outputs/metrics.json
+Modes:
+    python main.py           → live data via aci-hem-proxy
+    python main.py --csv     → load from data/raw/*.csv (offline)
 """
 
 import yaml
 import json
-from hem.io import load_data
+import sys
 from hem.preprocess import preprocess
 from hem.model import compute_hepp
 from hem.backtest import backtest
@@ -25,9 +22,19 @@ def main():
     print("=" * 45)
 
     config = yaml.safe_load(open("config.yaml"))
+    use_csv = '--csv' in sys.argv
 
-    print("Loading data...")
-    df = load_data("data/raw/")
+    if use_csv:
+        print("Mode: CSV (offline)")
+        from hem.io import load_data
+        df = load_data("data/raw/")
+    else:
+        print("Mode: Live (aci-hem-proxy)")
+        from hem.fetch import fetch_saimaa_composite
+        df = fetch_saimaa_composite(
+            start=config['time']['start'],
+            end=config['time']['end'],
+        )
 
     print("Preprocessing...")
     df = preprocess(df)

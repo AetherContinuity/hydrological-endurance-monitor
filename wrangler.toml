@@ -1,0 +1,6 @@
+name = "aci-hem-proxy"
+main = "cloudflare-worker/aci-hem-proxy.js"
+compatibility_date = "2024-01-01"
+
+[vars]
+ENVIRONMENT = "production"
