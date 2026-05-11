@@ -1,16 +1,11 @@
-=== SYKE asematunnisteiden testaus ===
-  1403300: HTTP Error 404: Not Found
-  1900: HTTP Error 404: Not Found
-  1901: HTTP Error 404: Not Found
-  0411200: HTTP Error 404: Not Found
-  1898: HTTP Error 404: Not Found
-  1889: HTTP Error 404: Not Found
-  1851: HTTP Error 404: Not Found
-
-=== Ilman Suure-rajausta ===
-  1403300 (no suure): HTTP Error 404: Not Found
-  1900 (no suure): HTTP Error 404: Not Found
-
-✗ Ei toimivaa tunnusta löydetty
-OK fmi.json (60 rivejä)
+CKAN: etsitään vedenkorkeus-resursseja...
+  Haku: https://ckan.ymparisto.fi/api/3/action/package_search?q=vedenkorkeus+hydrologinen&rows=10
+  Löytyi 2 pakettia
+  Paketti: vesistomalliaineisto-wsfs — Vesistömalliaineisto (WSFS)
+    Resurssi: Vesistöennusteet [HTML] → https://wwwi2.ymparisto.fi/i2/95/vesiA.html
+  Paketti: hydrologian-ja-vesien-kayton-tietoaineisto-hydro — Hydrologian ja vesien käytön tietoaineisto HYDRO
+    Resurssi: Syken Avoin tieto -palvelu [] → http://www.syke.fi/avointieto
+OK syke.json (0 resursseja)
+FMI: 730 rivejä
+OK fmi.json (730 rivejä)
 DONE
