@@ -1,27 +1,24 @@
-"""HEM data fetcher — FMI 10 vuotta + Iisvesi WSFS"""
+"""HEM data fetcher — FMI 10v lyhyemmissä paloissa"""
 import json, sys, re, os, urllib.request
 from datetime import datetime, timedelta, timezone
 
 NOW   = datetime.now(timezone.utc)
 END   = NOW.strftime('%Y-%m-%d')
-# 10 vuotta taaksepäin
-START = f"{NOW.year - 10}-{NOW.month:02d}-01"
+START_YEAR = NOW.year - 10
 
-FMI_BASE    = 'https://opendata.fmi.fi/wfs'
-# Asemat prioriteettijärjestyksessä — lähimpänä Iisvettä ensin
+FMI_BASE = 'https://opendata.fmi.fi/wfs'
+
+# Asemat: Lappeenranta toimii varmasti, muut kokeillaan
 FMI_STATIONS = [
-    ('101928', 'Suonenjoki'),       # ~15km Iisvedestä
-    ('101680', 'Kuopio Maaninka'),  # ~25km, maatalousasema
-    ('101590', 'Kuopio Savilahti'), # ~30km
-    ('101756', 'Lappeenranta'),     # fallback
+    ('101756', 'Lappeenranta Lepola'),   # toimii varmasti, pitkä historia
+    ('101928', 'Suonenjoki'),            # lähempänä mutta uudempi
+    ('101680', 'Kuopio Maaninka'),
 ]
-FMI_STATION = FMI_STATIONS[0][0]   # Käytä ensisijaisesti Suonenjokea
 
-def fetch_fmi_chunk(start, end):
-    """Hae yksi aikaikkuna FMI:stä"""
+def fetch_chunk(station, start, end):
     url = (f"{FMI_BASE}?service=WFS&version=2.0.0&request=getFeature"
            f"&storedquery_id=fmi::observations::weather::daily::simple"
-           f"&fmisid={FMI_STATION}&parameters=tday,rrday"
+           f"&fmisid={station}&parameters=tday,rrday"
            f"&starttime={start}T00:00:00Z&endtime={end}T23:59:59Z")
     req = urllib.request.Request(url, headers={'User-Agent':'ACI-HEM/1.1'})
     with urllib.request.urlopen(req, timeout=60) as r:
@@ -34,25 +31,38 @@ def fetch_fmi_chunk(start, end):
             for i in range(len(times))]
 
 def fetch_fmi():
-    """Hae FMI-data 2-vuoden paloissa (FMI ei tykkää liian pitkistä hauista)"""
-    all_rows = []
-    # Jaetaan 2-vuoden paloihin
-    chunk_start = datetime.strptime(START, '%Y-%m-%d')
-    chunk_end_dt = datetime.now(timezone.utc).replace(tzinfo=None)
-
-    while chunk_start < chunk_end_dt:
-        cs = chunk_start.strftime('%Y-%m-%d')
-        ce = min(chunk_start + timedelta(days=730), chunk_end_dt).strftime('%Y-%m-%d')
-        print(f'  FMI: {cs} → {ce}')
+    # Kokeile asemia järjestyksessä
+    for station_id, station_name in FMI_STATIONS:
+        print(f'Kokeillaan: {station_name} ({station_id})')
+        # Testaa 1 kuukausi ensin
+        test_start = (NOW - timedelta(days=30)).strftime('%Y-%m-%d')
         try:
-            rows = fetch_fmi_chunk(cs, ce)
+            test = fetch_chunk(station_id, test_start, END)
+            if len(test) > 20:
+                print(f'  Toimii: {len(test)} riviä viimeiseltä kuulta')
+                break
+            else:
+                print(f'  Vain {len(test)} riviä — kokeillaan seuraavaa')
+        except Exception as e:
+            print(f'  Virhe: {e}')
+    else:
+        print('Kaikki asemat epäonnistuivat!')
+        return None
+
+    # Hae 10 vuotta 1-vuoden paloissa
+    all_rows = []
+    for year in range(START_YEAR, NOW.year + 1):
+        ys = f'{year}-01-01'
+        ye = f'{year}-12-31' if year < NOW.year else END
+        print(f'  {year}: {ys} → {ye}')
+        try:
+            rows = fetch_chunk(station_id, ys, ye)
             all_rows.extend(rows)
             print(f'    +{len(rows)} riviä')
         except Exception as e:
             print(f'    FAIL: {e}')
-        chunk_start += timedelta(days=731)
 
-    # Poista duplikaatit, järjestä
+    # Deduploi
     seen = set()
     unique = []
     for r in all_rows:
@@ -61,18 +71,21 @@ def fetch_fmi():
             seen.add(k)
             unique.append(r)
     unique.sort(key=lambda x: (x['date'], x['param']))
-    print(f'FMI yhteensä: {len(unique)} riviä ({START} → {END})')
-    return {'source':'FMI','station':FMI_STATION,'fetched':END,'n':len(unique),'rows':unique}
+    print(f'FMI {station_name}: {len(unique)} riviä ({START_YEAR} → {NOW.year})')
+    return {'source':'FMI','station':station_id,'station_name':station_name,
+            'fetched':END,'n':len(unique),'rows':unique}
 
 os.makedirs('data/cache', exist_ok=True)
 
-# FMI
 try:
     fmi = fetch_fmi()
-    with open('data/cache/fmi.json','w') as f: json.dump(fmi, f)
-    print(f'OK fmi.json ({fmi["n"]} riviä)')
+    if fmi:
+        with open('data/cache/fmi.json','w') as f: json.dump(fmi, f)
+        print(f'OK fmi.json ({fmi["n"]} riviä)')
+    else:
+        sys.exit(1)
 except Exception as e:
-    print(f'FAIL FMI: {e}')
+    print(f'FAIL: {e}')
     sys.exit(1)
 
 print('DONE')
