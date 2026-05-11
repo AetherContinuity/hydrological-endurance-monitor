@@ -37,11 +37,27 @@ except Exception as e:
     print(f'ERA5 virhe: {e}')
     sys.exit(1)
 
-# Lue NetCDF
+# Lue NetCDF — Copernicus voi palauttaa ZIP:n
 try:
+    import zipfile
+    actual_nc = nc_file
+    if zipfile.is_zipfile(nc_file):
+        print('Puretaan ZIP...')
+        with zipfile.ZipFile(nc_file) as z:
+            names = z.namelist()
+            print(f'  ZIP sisältää: {names}')
+            nc_name = next((n for n in names if n.endswith('.nc')), None)
+            if nc_name:
+                extracted = nc_file.replace('.nc', '_extracted.nc')
+                with z.open(nc_name) as src, open(extracted, 'wb') as dst:
+                    dst.write(src.read())
+                actual_nc = extracted
+                print(f'  Purettu: {actual_nc}')
+
     from netCDF4 import Dataset, num2date
     import numpy as np
-    with Dataset(nc_file) as ds:
+    with Dataset(actual_nc) as ds:
+        print(f'  Muuttujat: {list(ds.variables.keys())}')
         t2m = next((v for v in ['t2m','VAR_2T'] if v in ds.variables), None)
         tp  = next((v for v in ['tp','VAR_TP']  if v in ds.variables), None)
         times = ds.variables['time'][:]
