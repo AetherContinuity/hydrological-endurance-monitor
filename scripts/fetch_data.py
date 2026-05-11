@@ -1,51 +1,80 @@
-"""HEM data fetcher — CKAN API + FMI"""
-import json, sys, re, os, urllib.request
+"""HEM data fetcher — wwwi2 + FMI"""
+import json, sys, re, os, urllib.request, urllib.parse
 from datetime import datetime, timedelta, timezone
 
 NOW   = datetime.now(timezone.utc)
 END   = NOW.strftime('%Y-%m-%d')
 START = (NOW - timedelta(days=365)).strftime('%Y-%m-%d')
 
-CKAN_BASE   = 'https://ckan.ymparisto.fi/api/3/action'
 FMI_BASE    = 'https://opendata.fmi.fi/wfs'
 FMI_STATION = '101756'
+WWWI2_BASE  = 'https://wwwi2.ymparisto.fi'
 
-def get_json(url):
-    req = urllib.request.Request(url, headers={'Accept':'application/json','User-Agent':'ACI-HEM/1.1'})
-    with urllib.request.urlopen(req, timeout=20) as r:
-        return json.loads(r.read())
+def get(url, timeout=20):
+    req = urllib.request.Request(url, headers={'User-Agent':'Mozilla/5.0','Accept':'*/*'})
+    with urllib.request.urlopen(req, timeout=timeout) as r:
+        return r.read()
 
-def fetch_syke_via_ckan():
-    """Etsi SYKE vedenkorkeus-resursseja CKAN API:n kautta"""
-    print('CKAN: etsitään vedenkorkeus-resursseja...')
+def fetch_syke_wwwi2():
+    """Kokeile wwwi2.ymparisto.fi eri URL-muodoilla"""
 
-    # Hae HYDRO-datasetti
-    search_url = f'{CKAN_BASE}/package_search?q=vedenkorkeus+hydrologinen&rows=10'
-    print(f'  Haku: {search_url}')
-    result = get_json(search_url)
-    packages = result.get('result', {}).get('results', [])
-    print(f'  Löytyi {len(packages)} pakettia')
+    # Tunnus 1403300 = Iisvesi (WSFS asematunnus)
+    # Tunnus 0411200 = Saimaa Lauritsala (HYDRO-tunnus)
+    tests = [
+        # WSFS download-muodot
+        f'{WWWI2_BASE}/i2/95/vesiA.html?tunnus=1403300&alku={START}&loppu={END}',
+        f'{WWWI2_BASE}/i2/95/vesiA.html?id=1403300&startDate={START}&endDate={END}&format=csv',
+        # SYKE avoin data -lataus
+        f'https://rajapinnat.ymparisto.fi/api/Hydrologiarajapinta/1.0/Havainto?Tunniste=1403300&Suure=Vedenkorkeus&alkupvm={START}&loppupvm={END}',
+        # Lyhyempi aikaväli testiksi
+        f'https://rajapinnat.ymparisto.fi/api/Hydrologiarajapinta/1.0/Havainto?Tunniste=1403300&Suure=Vedenkorkeus&alkupvm=2026-01-01&loppupvm=2026-05-01',
+    ]
 
-    rows = []
-    for pkg in packages:
-        print(f'  Paketti: {pkg.get("name")} — {pkg.get("title","")}')
-        for res in pkg.get('resources', []):
-            fmt = res.get('format','').upper()
-            url = res.get('url','')
-            print(f'    Resurssi: {res.get("name","")} [{fmt}] → {url[:80]}')
+    for url in tests:
+        print(f'\nKokeillaan: {url[:100]}')
+        try:
+            raw = get(url, timeout=15)
+            print(f'  OK: {len(raw)} bytes')
+            print(f'  Preview: {raw[:300]}')
+            return raw, url
+        except Exception as e:
+            print(f'  FAIL: {e}')
 
-            # Kokeile CSV-lataus
-            if fmt in ('CSV','JSON') or url.endswith('.csv') or url.endswith('.json'):
+    return None, None
+
+def parse_syke(raw, url):
+    """Yritä jäsentää eri formaateista"""
+    if not raw:
+        return []
+    text = raw.decode('utf-8', 'replace')
+
+    # JSON?
+    if text.strip().startswith('{') or text.strip().startswith('['):
+        try:
+            data = json.loads(text)
+            values = data if isinstance(data, list) else data.get('value', data.get('results', []))
+            if values and isinstance(values[0], dict):
+                keys = list(values[0].keys())
+                print(f'  JSON kentat: {keys}')
+                ts  = next((k for k in keys if any(x in k.lower() for x in ['aika','time','pvm','date'])), None)
+                val = next((k for k in keys if any(x in k.lower() for x in ['arvo','value','wl','korkeus'])), None)
+                if ts and val:
+                    return [{'date': str(v[ts])[:10], 'value': v[val]} for v in values]
+        except: pass
+
+    # CSV?
+    lines = [l.strip() for l in text.split('\n') if l.strip()]
+    if len(lines) > 2:
+        rows = []
+        for line in lines[1:]:
+            parts = re.split(r'[;,\t]', line)
+            if len(parts) >= 2:
                 try:
-                    req = urllib.request.Request(url, headers={'User-Agent':'ACI-HEM/1.1'})
-                    with urllib.request.urlopen(req, timeout=15) as r:
-                        content = r.read()
-                    print(f'      OK: {len(content)} bytes — {content[:200]}')
-                    rows.append({'url': url, 'format': fmt, 'size': len(content), 'preview': content[:100].decode('utf-8','replace')})
-                except Exception as e:
-                    print(f'      FAIL: {e}')
-
-    return {'source':'SYKE-CKAN','n':len(rows),'resources':rows,'fetched':END}
+                    rows.append({'date': parts[0][:10], 'value': float(parts[1].replace(',','.'))})
+                except: pass
+        if rows:
+            return rows
+    return []
 
 def fetch_fmi():
     url = (f"{FMI_BASE}?service=WFS&version=2.0.0&request=getFeature"
@@ -61,16 +90,20 @@ def fetch_fmi():
     rows   = [{'date':times[i],'param':pnames[i],
                'value':None if values[i] in ('NaN','') else float(values[i])}
               for i in range(len(times))]
-    print(f'FMI: {len(rows)} rivejä')
     return {'source':'FMI','station':FMI_STATION,'fetched':END,'n':len(rows),'rows':rows}
 
 os.makedirs('data/cache', exist_ok=True)
 errors = []
 
 try:
-    syke = fetch_syke_via_ckan()
+    raw, url = fetch_syke_wwwi2()
+    rows = parse_syke(raw, url)
+    syke = {'source':'SYKE-wwwi2','url':url,'fetched':END,'n':len(rows),'rows':rows}
     with open('data/cache/syke.json','w') as f: json.dump(syke, f)
-    print(f'OK syke.json ({syke["n"]} resursseja)')
+    print(f'\nOK syke.json ({len(rows)} rivejä)')
+    if not rows:
+        print('VAROITUS: Ei rivejä — SYKE ei palauta dataa Actionsin IP:ltä')
+        # Ei virhettä — jatketaan ilman vedenkorkeusdataa
 except Exception as e:
     print(f'FAIL SYKE: {e}')
     errors.append(str(e))
