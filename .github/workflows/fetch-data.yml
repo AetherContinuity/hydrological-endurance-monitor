@@ -11,10 +11,14 @@ env:
 jobs:
   fetch:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -22,16 +26,16 @@ jobs:
           python-version: '3.11'
 
       - name: Fetch SYKE + FMI data
-        run: python scripts/fetch_data.py
+        run: python scripts/fetch_data.py 2>&1
         continue-on-error: true
 
       - name: Show cache contents
         run: |
           echo "=== data/cache/ ==="
           ls -la data/cache/ || echo "(empty)"
-          echo "=== syke.json preview ==="
+          echo "=== syke.json ==="
           cat data/cache/syke.json 2>/dev/null | head -c 500 || echo "(missing)"
-          echo "=== fmi.json preview ==="
+          echo "=== fmi.json ==="
           cat data/cache/fmi.json 2>/dev/null | head -c 500 || echo "(missing)"
 
       - name: Commit cache
