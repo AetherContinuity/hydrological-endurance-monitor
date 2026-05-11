@@ -1,6 +1,10 @@
-name = "aci-hem-proxy"
-main = "cloudflare-worker/aci-hem-proxy.js"
-compatibility_date = "2024-01-01"
+# Deploy aci-nve-proxy-v2 to extend the existing worker
+# with SYKE and FMI routes.
+#
+# IMPORTANT: This extends the existing aci-nve-proxy worker.
+# Deploy with: wrangler deploy
+# The existing NVE route (/?week=current) remains unchanged.
 
-[vars]
-ENVIRONMENT = "production"
+name = "aci-nve-proxy"
+main = "cloudflare-worker/aci-nve-proxy-v2.js"
+compatibility_date = "2024-01-01"

@@ -2,7 +2,7 @@
 hem/fetch.py — Live data fetcher via aci-hem-proxy Cloudflare Worker.
 
 Same pattern as WEM's Fingrid proxy: all API calls go through
-https://aci-hem-proxy.ruotsalainen-marko.workers.dev
+https://aci-nve-proxy.ruotsalainen-marko.workers.dev
 
 Usage:
     from hem.fetch import fetch_water_level, fetch_fmi
@@ -14,7 +14,7 @@ import requests
 import pandas as pd
 from datetime import datetime, timedelta
 
-PROXY_BASE = 'https://aci-hem-proxy.ruotsalainen-marko.workers.dev'
+PROXY_BASE = 'https://aci-nve-proxy.ruotsalainen-marko.workers.dev'
 
 # SYKE station IDs for Saimaa system
 STATIONS = {
