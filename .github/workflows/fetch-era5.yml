@@ -36,6 +36,10 @@ jobs:
       - name: Fetch ERA5-Land (Saimaa area)
         run: python scripts/fetch_era5.py 2>&1 | tee data/cache/era5_log.txt
 
+      - name: Fetch Iisvesi WSFS
+        run: python scripts/fetch_iisvesi.py 2>&1 | tee data/cache/iisvesi_log.txt
+        continue-on-error: true
+
       - name: Commit ERA5 cache
         run: |
           git config user.name "ACI-HEM-bot"
