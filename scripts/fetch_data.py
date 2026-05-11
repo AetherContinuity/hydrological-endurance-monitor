@@ -1,63 +1,58 @@
-"""HEM data fetcher — GitHub Actions"""
-import json, sys, re, os
-from datetime import datetime, timedelta
+"""HEM data fetcher — GitHub Actions. URL rakennetaan käsin OData/WFS-yhteensopivuuden vuoksi."""
+import json, sys, re, os, urllib.request
+from datetime import datetime, timedelta, timezone
 
-END   = datetime.utcnow().strftime('%Y-%m-%d')
-START = (datetime.utcnow() - timedelta(days=400)).strftime('%Y-%m-%d')
+NOW   = datetime.now(timezone.utc)
+END   = NOW.strftime('%Y-%m-%d')
+START = (NOW - timedelta(days=365)).strftime('%Y-%m-%d')
 
 SYKE_BASE     = 'https://rajapinnat.ymparisto.fi/api/Hydrologiarajapinta/1.1/odata/WaterLevelRegisters'
 SYKE_LOCATION = '04.252.1.001'
 FMI_BASE      = 'https://opendata.fmi.fi/wfs'
 FMI_STATION   = '101756'
 
-import subprocess, sys
-subprocess.check_call([sys.executable, '-m', 'pip', 'install', 'requests', '-q'])
-import requests
-
 def fetch_syke():
-    params = {
-        '$filter':   f"LocationId eq '{SYKE_LOCATION}' and Timestamp ge {START}T00:00:00Z and Timestamp le {END}T23:59:59Z",
-        '$orderby':  'Timestamp asc',
-        '$top':      5000,
-        '$format':   'json',
-    }
-    print(f'SYKE params: {params}')
-    r = requests.get(SYKE_BASE, params=params, timeout=30,
-                     headers={'Accept': 'application/json', 'User-Agent': 'ACI-HEM/1.1'})
-    print(f'SYKE status: {r.status_code}')
-    print(f'SYKE url: {r.url}')
-    print(f'SYKE body[0:400]: {r.text[:400]}')
-    r.raise_for_status()
-    data = r.json()
+    # Rakennetaan URL KÄSIN — requests enkoodaa $-merkit väärin
+    filt = f"LocationId eq '{SYKE_LOCATION}' and Timestamp ge {START}T00:00:00Z and Timestamp le {END}T23:59:59Z"
+    from urllib.parse import quote
+    url = (f"{SYKE_BASE}"
+           f"?$filter={quote(filt)}"
+           f"&$orderby=Timestamp%20asc"
+           f"&$top=5000"
+           f"&$format=json")
+    print(f'SYKE url: {url[:150]}')
+    req = urllib.request.Request(url, headers={'Accept': 'application/json', 'User-Agent': 'ACI-HEM/1.1'})
+    with urllib.request.urlopen(req, timeout=30) as r:
+        raw = r.read()
+    print(f'SYKE status: 200, bytes: {len(raw)}')
+    print(f'SYKE preview: {raw[:300]}')
+    data = json.loads(raw)
     values = data.get('value', [])
     if not values:
-        # debug: hae top=3 ilman filteriä
-        r2 = requests.get(SYKE_BASE, params={'$top': 3, '$format': 'json'},
-                          timeout=30, headers={'Accept': 'application/json'})
-        print(f'SYKE top=3 ({r2.status_code}): {r2.text[:500]}')
+        print('SYKE: tyhjä value-lista')
         return {'source': 'SYKE', 'n': 0, 'rows': [], 'fetched': END}
     sample = values[0]
     print(f'SYKE kentat: {list(sample.keys())}')
-    ts  = next((k for k in ['Timestamp','Aika','timestamp'] if k in sample), None)
-    val = next((k for k in ['Wvalue','Arvo','wvalue','arvo'] if k in sample), None)
-    if not ts or not val:
-        raise ValueError(f'Tuntematon kenttarakenne: {list(sample.keys())}')
+    ts  = next((k for k in ['Timestamp','Aika'] if k in sample), None)
+    val = next((k for k in ['Wvalue','Arvo'] if k in sample), None)
     rows = [{'date': str(v[ts])[:10], 'value': v[val]} for v in values]
-    print(f'SYKE: {len(rows)} riveja')
+    print(f'SYKE: {len(rows)} riveja, esim: {rows[0]}')
     return {'source': 'SYKE', 'location': SYKE_LOCATION, 'fetched': END, 'n': len(rows), 'rows': rows}
 
 def fetch_fmi():
-    params = {
-        'service': 'WFS', 'version': '2.0.0', 'request': 'getFeature',
-        'storedquery_id': 'fmi::observations::weather::daily::simple',
-        'fmisid': FMI_STATION, 'parameters': 'tday,rrday',
-        'starttime': f'{START}T00:00:00Z', 'endtime': f'{END}T23:59:59Z',
-    }
-    r = requests.get(FMI_BASE, params=params, timeout=30,
-                     headers={'User-Agent': 'ACI-HEM/1.1'})
-    print(f'FMI status: {r.status_code}')
-    r.raise_for_status()
-    xml = r.text
+    # FMI: storedquery_id sisältää :: jota ei saa enkoodata
+    url = (f"{FMI_BASE}"
+           f"?service=WFS&version=2.0.0&request=getFeature"
+           f"&storedquery_id=fmi::observations::weather::daily::simple"
+           f"&fmisid={FMI_STATION}"
+           f"&parameters=tday,rrday"
+           f"&starttime={START}T00:00:00Z"
+           f"&endtime={END}T23:59:59Z")
+    print(f'FMI url: {url[:150]}')
+    req = urllib.request.Request(url, headers={'User-Agent': 'ACI-HEM/1.1'})
+    with urllib.request.urlopen(req, timeout=30) as r:
+        xml = r.read().decode('utf-8')
+    print(f'FMI bytes: {len(xml)}, preview: {xml[:150]}')
     times  = [m[1][:10] for m in re.finditer(r'<BsWfs:Time>([^<]+)</BsWfs:Time>', xml)]
     pnames = [m[1]      for m in re.finditer(r'<BsWfs:ParameterName>([^<]+)</BsWfs:ParameterName>', xml)]
     values = [m[1]      for m in re.finditer(r'<BsWfs:ParameterValue>([^<]+)</BsWfs:ParameterValue>', xml)]
