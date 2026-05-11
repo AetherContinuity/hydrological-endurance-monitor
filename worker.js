@@ -112,7 +112,12 @@ async function handleSyke(params) {
   const resp = await fetch(sykeUrl, { headers: { 'Accept': 'application/json' } });
 
   if (!resp.ok) {
-    return new Response(JSON.stringify({ error: `SYKE HTTP ${resp.status}` }), { status: 502, headers: CORS });
+    const errText = await resp.text().catch(() => '');
+    return new Response(JSON.stringify({
+      error: `SYKE HTTP ${resp.status}`,
+      url: sykeUrl,
+      detail: errText.slice(0, 200)
+    }), { status: 502, headers: CORS });
   }
 
   const data = await resp.json();
@@ -143,7 +148,7 @@ async function handleSykePaikat() {
 
 async function handleFmi(params) {
   const station = params.get('station') || '101756'; // Lappeenranta Lepola
-  const param   = params.get('param')   || 'temperature,precipitation';
+  const param   = params.get('param')   || 'tday,rrday';
   const start   = params.get('start')   || '2020-01-01';
   const end     = params.get('end')     || new Date().toISOString().slice(0, 10);
 
