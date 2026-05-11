@@ -1,11 +1,8 @@
-CKAN: etsitään vedenkorkeus-resursseja...
-  Haku: https://ckan.ymparisto.fi/api/3/action/package_search?q=vedenkorkeus+hydrologinen&rows=10
-  Löytyi 2 pakettia
-  Paketti: vesistomalliaineisto-wsfs — Vesistömalliaineisto (WSFS)
-    Resurssi: Vesistöennusteet [HTML] → https://wwwi2.ymparisto.fi/i2/95/vesiA.html
-  Paketti: hydrologian-ja-vesien-kayton-tietoaineisto-hydro — Hydrologian ja vesien käytön tietoaineisto HYDRO
-    Resurssi: Syken Avoin tieto -palvelu [] → http://www.syke.fi/avointieto
-OK syke.json (0 resursseja)
-FMI: 730 rivejä
+
+Kokeillaan: https://wwwi2.ymparisto.fi/i2/95/vesiA.html?tunnus=1403300&alku=2025-05-11&loppu=2026-05-11
+  OK: 39440 bytes
+  Preview: b'<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "https://www.w3.org/TR/html4/loose.dtd">\r\n<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">\r\n<link rel="stylesheet" href="/inc/css/ymparisto.css" type="text/css">\r\n\r\n<html lang="fi">\r\n<head>\r\n\t<title>www.vesi.fi</title>\r'
+
+OK syke.json (68 rivejä)
 OK fmi.json (730 rivejä)
 DONE
