@@ -33,6 +33,9 @@ export default {
       if (url.pathname === '/fmi' || url.pathname === '/fmi/') {
         return await handleFmi(url.searchParams);
       }
+      if (url.pathname.startsWith('/vesiraja')) {
+        return await handleVesiraja(url);
+      }
       // Default: NVE (v10 — ei muutoksia)
       return await handleNve(env);
 
