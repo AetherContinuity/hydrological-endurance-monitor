@@ -4,7 +4,7 @@ from datetime import datetime, timedelta, timezone
 
 NOW        = datetime.now(timezone.utc)
 END        = NOW.strftime('%Y-%m-%d')
-START_YEAR = NOW.year - 10
+START_YEAR = 1940  # Historiallinen data — 1940-luvun kuivuusjakso vertailua varten
 FMI_BASE   = 'https://opendata.fmi.fi/wfs'
 FMI_PLACE  = 'Kuopio'   # FMI valitsee synoptisen aseman
 
