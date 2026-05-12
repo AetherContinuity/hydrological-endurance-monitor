@@ -73,6 +73,24 @@ for page, key in [('wlsanafi.html','f14'), ('wksanafi.html','f90'), ('w3sanafi.h
     except Exception as e:
         print(f'{page} virhe: {e}')
 
+# 4. Kokeile graafiSivu historiallisella periodilla
+print('\nGraafiSivu-testaus:')
+for period in ['100x365','50x365','10x365']:
+    url = f'https://wwwi2.ymparisto.fi/i2/graafiSivu.html?pointId=l147221001y&variable=w2&lang=fi&period={period}'
+    try:
+        raw = get(url)
+        text = raw.decode('utf-8','replace')
+        import re
+        nums = re.findall(r'9[78]\.\d{2}', text)
+        years = re.findall(r'(?:19[3-9]\d|20[01]\d|202[0-6])', text)
+        print(f'  period={period}: {len(raw)}b, wl:{len(nums)}, vuosia:{len(set(years))}')
+        if nums: print(f'    WL: {nums[:10]}')
+        if years: print(f'    Vuodet: {sorted(set(years))[:15]}')
+        fname = f'data/cache/iisvesi_graafi_{period}.html'
+        with open(fname,'wb') as f: f.write(raw)
+    except Exception as e:
+        print(f'  period={period}: FAIL {e}')
+
 with open('data/cache/iisvesi.json','w') as f:
     json.dump(result, f, ensure_ascii=False, indent=2)
 print(f'\nOK iisvesi.json')
