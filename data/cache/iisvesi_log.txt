@@ -1,29 +1,23 @@
-GET https://wwwi2.ymparisto.fi/i2/14/l147221001y/wqfi.html
-  34553 bytes
-  OK wlsanafi.html: 5832b
-    Vedenkorkeus-arvoja: ['97.51', '97.49', '97.55', '97.49', '97.50', '97.52', '97.55', '97.49', '97.58', '98.01']
-  OK wksanafi.html: 5831b
-    Vedenkorkeus-arvoja: ['97.52', '97.49', '97.73', '97.49', '97.50', '97.56', '97.73', '97.49', '97.80', '98.01']
-  OK w3sanafi.html: 5817b
-    Vedenkorkeus-arvoja: ['97.92', '97.59', '98.18', '97.59', '97.82', '98.05', '98.18', '97.58', '98.42', '98.01']
-  OK qoutsanafi.html: 3966b
-  FAIL psanafi.html: HTTP Error 404: Not Found
-  FAIL mvssanafi.html: HTTP Error 404: Not Found
+wqfi: None m, huippu None
+wlsanafi.html: huippu 97.51 m (21.5.2026)
+  26.05.: 97.5 m (p25=97.49 p75=97.51)
+  12.06.: 97.47 m (p25=97.45 p75=97.51)
+  12.07.: 97.41 m (p25=97.34 p75=97.49)
+  12.08.: 97.36 m (p25=97.29 p75=97.49)
+wksanafi.html: huippu 97.52 m (24.5.2026)
+  26.05.: 97.5 m (p25=97.49 p75=97.51)
+  12.06.: 97.47 m (p25=97.45 p75=97.51)
+  12.07.: 97.41 m (p25=97.34 p75=97.49)
+  12.08.: 97.36 m (p25=97.29 p75=97.49)
+w3sanafi.html: huippu 97.92 m (12.5.2027)
+  26.05.: 97.5 m (p25=97.49 p75=97.51)
+  12.06.: 97.47 m (p25=97.45 p75=97.51)
+  12.07.: 97.41 m (p25=97.34 p75=97.49)
+  12.08.: 97.36 m (p25=97.29 p75=97.49)
 
-OK: {
-  "source": "SYKE-WSFS",
-  "fetched": "2026-05-12",
-  "forecast_central_m": 97.51,
-  "peak_timing": "15.5.2026 -     24.5.2026",
-  "mhw_m": 98.46,
-  "mhw_date": "10.06.1988",
-  "forecast_values_m": [
-    97.49,
-    97.51,
-    97.52,
-    97.55,
-    97.59,
-    97.73,
-    97.92
-  ]
-}
+GraafiSivu-testaus:
+  period=100x365: 2184b, wl:0, vuosia:0
+  period=50x365: 2184b, wl:0, vuosia:0
+  period=10x365: 2184b, wl:0, vuosia:0
+
+OK iisvesi.json

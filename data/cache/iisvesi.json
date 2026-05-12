@@ -1,17 +1,153 @@
 {
   "source": "SYKE-WSFS",
   "fetched": "2026-05-12",
-  "forecast_central_m": 97.51,
-  "peak_timing": "15.5.2026 -     24.5.2026",
-  "mhw_m": 98.46,
-  "mhw_date": "10.06.1988",
-  "forecast_values_m": [
-    97.49,
-    97.51,
-    97.52,
-    97.55,
-    97.59,
-    97.73,
-    97.92
-  ]
+  "forecasts": [],
+  "forecast_central_m": null,
+  "f14": {
+    "peak_date_mean": "21.5.2026",
+    "peak_wl_mean": 97.51,
+    "peak_p5": 97.49,
+    "peak_p95": 97.55,
+    "ref_years": "1910-2025",
+    "ref_mean_max": 98.01,
+    "ref_min_max": 97.36,
+    "mhw_m": 98.46,
+    "mhw_date": "10.06.1988",
+    "forecasts": [
+      {
+        "label": "Vedenkorkeuden vaihteluvälit Kahden viikon kuluttua, eli 26.05.",
+        "date": "26.05.",
+        "mean": 97.5,
+        "p25": 97.49,
+        "p75": 97.51,
+        "p95": 97.55,
+        "p5": 97.47
+      },
+      {
+        "label": "Kuukauden kuluttua, eli 12.06.",
+        "date": "12.06.",
+        "mean": 97.47,
+        "p25": 97.45,
+        "p75": 97.51,
+        "p95": 97.58,
+        "p5": 97.38
+      },
+      {
+        "label": "Kahden kuukauden kuluttua, eli 12.07.",
+        "date": "12.07.",
+        "mean": 97.41,
+        "p25": 97.34,
+        "p75": 97.49,
+        "p95": 97.64,
+        "p5": 97.29
+      },
+      {
+        "label": "Kolmen kuukauden kuluttua, eli 12.08.",
+        "date": "12.08.",
+        "mean": 97.36,
+        "p25": 97.29,
+        "p75": 97.49,
+        "p95": 97.7,
+        "p5": 97.14
+      }
+    ]
+  },
+  "f90": {
+    "peak_date_mean": "24.5.2026",
+    "peak_wl_mean": 97.52,
+    "peak_p5": 97.5,
+    "peak_p95": 97.73,
+    "ref_years": "1910-2025",
+    "ref_mean_max": 98.01,
+    "ref_min_max": 97.36,
+    "mhw_m": 98.46,
+    "mhw_date": "10.06.1988",
+    "forecasts": [
+      {
+        "label": "Vedenkorkeuden vaihteluvälit Kahden viikon kuluttua, eli 26.05.",
+        "date": "26.05.",
+        "mean": 97.5,
+        "p25": 97.49,
+        "p75": 97.51,
+        "p95": 97.55,
+        "p5": 97.47
+      },
+      {
+        "label": "Kuukauden kuluttua, eli 12.06.",
+        "date": "12.06.",
+        "mean": 97.47,
+        "p25": 97.45,
+        "p75": 97.51,
+        "p95": 97.58,
+        "p5": 97.38
+      },
+      {
+        "label": "Kahden kuukauden kuluttua, eli 12.07.",
+        "date": "12.07.",
+        "mean": 97.41,
+        "p25": 97.34,
+        "p75": 97.49,
+        "p95": 97.64,
+        "p5": 97.29
+      },
+      {
+        "label": "Kolmen kuukauden kuluttua, eli 12.08.",
+        "date": "12.08.",
+        "mean": 97.36,
+        "p25": 97.29,
+        "p75": 97.49,
+        "p95": 97.7,
+        "p5": 97.14
+      }
+    ]
+  },
+  "f365": {
+    "peak_date_mean": "12.5.2027",
+    "peak_wl_mean": 97.92,
+    "peak_p5": 97.59,
+    "peak_p95": 98.18,
+    "ref_years": "1910-2025",
+    "ref_mean_max": 98.01,
+    "ref_min_max": 97.36,
+    "mhw_m": 98.46,
+    "mhw_date": "10.06.1988",
+    "forecasts": [
+      {
+        "label": "Vedenkorkeuden vaihteluvälit Kahden viikon kuluttua, eli 26.05.",
+        "date": "26.05.",
+        "mean": 97.5,
+        "p25": 97.49,
+        "p75": 97.51,
+        "p95": 97.55,
+        "p5": 97.47
+      },
+      {
+        "label": "Kuukauden kuluttua, eli 12.06.",
+        "date": "12.06.",
+        "mean": 97.47,
+        "p25": 97.45,
+        "p75": 97.51,
+        "p95": 97.58,
+        "p5": 97.38
+      },
+      {
+        "label": "Kahden kuukauden kuluttua, eli 12.07.",
+        "date": "12.07.",
+        "mean": 97.41,
+        "p25": 97.34,
+        "p75": 97.49,
+        "p95": 97.64,
+        "p5": 97.29
+      },
+      {
+        "label": "Kolmen kuukauden kuluttua, eli 12.08.",
+        "date": "12.08.",
+        "mean": 97.36,
+        "p25": 97.29,
+        "p75": 97.49,
+        "p95": 97.7,
+        "p5": 97.14
+      }
+    ]
+  }
 }

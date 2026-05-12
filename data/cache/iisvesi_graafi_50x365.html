@@ -1,0 +1,56 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="fi"><head>
+
+<link rel="stylesheet" href="https://wwwi2.ymparisto.fi/inc/css/ymparisto.css" type="text/css">
+
+<title>www.ymparisto.fi</title>
+  <meta charset='utf-8'>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="PRAGMA" content="no-cache">
+  <meta http-equiv="no-cache">
+  <meta http-equiv="EXPIRES" content="-1">
+  <meta http-equiv="Cache-Control" content="no-cache">
+</head>
+
+<body leftmargin="0" topmargin="0" rightmargin="0" bottommargin="0" marginwidth="0" marginheight="0" text="#000000" bgcolor="#FFFFFF"><div id="WzTtDiV" style="visibility: hidden; position: absolute; overflow: hidden; padding: 0px; width: 0px; left: 0px; top: 0px;"></div>
+
+
+<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+<script type="text/javascript" src="https://wwwi2.ymparisto.fi/i2/ohje/highcharts.js"></script>
+<script type="text/javascript" src="https://wwwi2.ymparisto.fi/i2/ohje/highcharts-more.js"></script>
+
+<script type="text/javascript" charset="utf-8" src="https://wwwi2.ymparisto.fi/i2/vespa/graafiPisteet.js"></script>
+<script type="text/javascript" charset="utf-8" src="./chartTools.js"></script>
+
+
+<div id="graaficontaineri" style="width:100%; height:100%; overflow: hidden;" data-highcharts-chart="0"></div>
+
+<script>
+
+
+  var urlParams = readURLParameters();
+  for (var [id, nimi] of Object.entries(graafiPisteet)) {
+    if (`${id}` == urlParams.pointId) {
+      pisteNimi = `${nimi}`;
+    };
+  }
+ 
+  drawChart(pisteNimi, urlParams.pointId, urlParams.variable, 'graaficontaineri', urlParams.lang, urlParams.period)
+
+  
+  function readURLParameters() {
+      var queryDict = {};
+      location.search.substr(1).split("&").forEach(function (item) {
+          if (item != undefined && item != "") {
+              var param = item.split("=")[0];
+              // replace empty space codes with empty space and store
+              queryDict[param] = item.split("=")[1].split('%20').join(" ");
+          }
+      });
+      return queryDict;
+  }
+
+
+</script>
+
+</body></html>

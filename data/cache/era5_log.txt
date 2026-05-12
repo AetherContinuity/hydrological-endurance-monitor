@@ -1,10 +1,10 @@
-2026-05-12 04:48:03,301 INFO [2025-12-11T00:00:00] Please note that a dedicated catalogue entry for this dataset, post-processed and stored in Analysis Ready Cloud Optimized (ARCO) format (Zarr), is available for optimised time-series retrievals (i.e. for retrieving data from selected variables for a single point over an extended period of time in an efficient way). You can discover it [here](https://cds.climate.copernicus.eu/datasets/reanalysis-era5-land-timeseries?tab=overview)
-2026-05-12 04:48:03,302 INFO Request ID is 814d9bba-9631-4762-b92b-05a3f84bfdbe
-2026-05-12 04:48:03,496 INFO status has been updated to accepted
-2026-05-12 04:48:19,525 INFO status has been updated to running
-2026-05-12 04:48:38,860 INFO status has been updated to successful
+2026-05-12 04:59:48,892 INFO [2025-12-11T00:00:00] Please note that a dedicated catalogue entry for this dataset, post-processed and stored in Analysis Ready Cloud Optimized (ARCO) format (Zarr), is available for optimised time-series retrievals (i.e. for retrieving data from selected variables for a single point over an extended period of time in an efficient way). You can discover it [here](https://cds.climate.copernicus.eu/datasets/reanalysis-era5-land-timeseries?tab=overview)
+2026-05-12 04:59:48,892 INFO Request ID is a9756e9d-c408-4133-b0a6-2f54083457ca
+2026-05-12 04:59:49,076 INFO status has been updated to accepted
+2026-05-12 05:00:15,392 INFO status has been updated to running
+2026-05-12 05:00:26,943 INFO status has been updated to successful
 ERA5: 2026-05 → area [63.2, 26.5, 62.5, 27.2]
-cf050f6b6d8fed451f12a2707b0165fb.zip:   0%|          | 0.00/33.5k [00:00<?, ?B/s]cf050f6b6d8fed451f12a2707b0165fb.zip: 100%|██████████| 33.5k/33.5k [00:01<00:00, 24.8kB/s]                                                                                          Ladattu: 34 KB
+cf050f6b6d8fed451f12a2707b0165fb.zip:   0%|          | 0.00/33.5k [00:00<?, ?B/s]cf050f6b6d8fed451f12a2707b0165fb.zip: 100%|██████████| 33.5k/33.5k [00:00<00:00, 42.9kB/s]                                                                                          Ladattu: 34 KB
 Purettu: data/era5_raw/era5_2026_05_x.nc
 Jäsennetty: 6 päivää
 OK: 6 päivää cachessa (2026-05-01 → 2026-05-06)
