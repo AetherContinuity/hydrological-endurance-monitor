@@ -54,7 +54,7 @@ try:
     with open('data/cache/iisvesi_wqfi.html','wb') as f: f.write(raw)
     d = parse_wsfs(raw)
     result.update(d)
-    result['forecast_central_m'] = d.get('peak_wl_mean')
+    result['forecast_central_m'] = d.get('peak_wl_mean')  # päivitetään f14:stä jos None
     print(f'wqfi: {d.get("peak_wl_mean")} m, huippu {d.get("peak_date_mean")}')
 except Exception as e:
     print(f'wqfi virhe: {e}')
@@ -90,6 +90,15 @@ for period in ['100x365','50x365','10x365']:
         with open(fname,'wb') as f: f.write(raw)
     except Exception as e:
         print(f'  period={period}: FAIL {e}')
+
+# Varmista forecast_central_m f14:stä
+if not result.get('forecast_central_m') and result.get('f14'):
+    result['forecast_central_m'] = result['f14'].get('peak_wl_mean')
+    result['peak_date_mean']     = result['f14'].get('peak_date_mean')
+    result['ref_mean_max']       = result['f14'].get('ref_mean_max')
+    result['ref_min_max']        = result['f14'].get('ref_min_max')
+    result['mhw_m']              = result['f14'].get('mhw_m')
+    result['mhw_date']           = result['f14'].get('mhw_date')
 
 with open('data/cache/iisvesi.json','w') as f:
     json.dump(result, f, ensure_ascii=False, indent=2)
