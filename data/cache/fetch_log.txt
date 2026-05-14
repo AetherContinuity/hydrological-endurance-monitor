@@ -86,7 +86,7 @@ FMI place=Kuopio 10 vuotta (1940-2026)
   2023: +730 riviä (tday=365)
   2024: +732 riviä (tday=366)
   2025: +730 riviä (tday=365)
-  2026: +264 riviä (tday=132)
-FMI Kuopio: 47848 riviä
-OK fmi.json (47848 riviä · Kuopio)
+  2026: +266 riviä (tday=133)
+FMI Kuopio: 47850 riviä
+OK fmi.json (47850 riviä · Kuopio)
 DONE
