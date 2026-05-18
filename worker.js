@@ -39,6 +39,9 @@ export default {
       if (url.pathname.startsWith('/vesiraja')) {
         return await handleVesiraja(url);
       }
+      if (url.pathname === '/era5' || url.pathname === '/era5/') {
+        return await handleERA5(url.searchParams);
+      }
       // Default: NVE (v10 — ei muutoksia)
       return await handleNve(env);
 
@@ -312,5 +315,50 @@ async function handleSykeCSV(params) {
     n: rows.length,
     csv_preview: csv.slice(0, 400),
     rows: rows.slice(0, 10)
+  }), { headers: CORS });
+}
+
+// ─── ERA5 via Open-Meteo ──────────────────────────────────────────────────────
+// Ei API-avainta tarvita. Toimii suoraan selaimesta ja Workerista.
+// Parametrit: ?lat=62.95&lng=26.85&start=2015-01-01
+// BEM-käyttö: sadevajeanomalia D_c-komponentille
+
+async function handleERA5(params) {
+  const lat   = params.get('lat')   || '62.95';   // Rautalammin reitti default
+  const lng   = params.get('lng')   || '26.85';
+  const start = params.get('start') || '2015-01-01';
+  const end   = new Date().toISOString().slice(0,10);
+
+  const url = `https://archive-api.open-meteo.com/v1/archive?` +
+    `latitude=${lat}&longitude=${lng}` +
+    `&start_date=${start}&end_date=${end}` +
+    `&daily=precipitation_sum,temperature_2m_mean` +
+    `&timezone=Europe%2FHelsinki`;
+
+  const r = await fetch(url);
+  if (!r.ok) return new Response(JSON.stringify({error: `Open-Meteo ${r.status}`}), {status:502, headers:CORS});
+
+  const d = await r.json();
+  const precips = (d.daily?.precipitation_sum || []).filter(v => v != null);
+  const temps   = (d.daily?.temperature_2m_mean || []).filter(v => v != null);
+
+  // Laske anomalia: viimeiset 365pv vs referenssi
+  const recent = precips.slice(-365).reduce((a,b) => a+b, 0);
+  const ref    = precips.slice(0,-365);
+  const refAnn = ref.length > 0 ? ref.reduce((a,b)=>a+b,0)/ref.length*365 : null;
+  const anomPct = refAnn ? Math.round((recent-refAnn)/refAnn*1000)/10 : null;
+
+  // Lämpötila 30pv keskiarvo
+  const lastT = temps.slice(-30);
+  const avgT  = lastT.length ? Math.round(lastT.reduce((a,b)=>a+b,0)/lastT.length*10)/10 : null;
+
+  return new Response(JSON.stringify({
+    source:   'ERA5-Land via Open-Meteo',
+    lat, lng, start, end,
+    precip_12mo_mm:     Math.round(recent),
+    precip_ref_ann_mm:  refAnn ? Math.round(refAnn) : null,
+    precip_anomaly_pct: anomPct,
+    temp_30d_avg_c:     avgT,
+    n_days:             precips.length,
   }), { headers: CORS });
 }
