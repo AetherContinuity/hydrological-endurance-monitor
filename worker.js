@@ -39,6 +39,9 @@ export default {
       if (url.pathname.startsWith('/vesiraja')) {
         return await handleVesiraja(url);
       }
+      if (url.pathname === '/syke/wsfs' || url.pathname === '/syke/wsfs/') {
+        return await handleSykeWsfs(url.searchParams);
+      }
       if (url.pathname === '/era5' || url.pathname === '/era5/') {
         return await handleERA5(url.searchParams);
       }
@@ -362,3 +365,30 @@ async function handleERA5(params) {
     n_days:             precips.length,
   }), { headers: CORS });
 }
+
+// ─── SYKE WSFS-ennuste ───────────────────────────────────────────────────────
+// Hakee minkä tahansa WSFS-pisteen vedenkorkeusennusteen
+// ?point=q6700800y  (Muonionjoki Muonio)
+// ?point=l147221001y (Iisvesi, default)
+
+async function handleSykeWsfs(params) {
+  const point = params.get('point') || 'l147221001y';
+  const url = `https://wwwi2.ymparisto.fi/i2/wsfs/${point}_w.json`;
+  
+  const r = await fetch(url, { headers: { 'Accept': 'application/json' } });
+  if (!r.ok) {
+    return new Response(JSON.stringify({
+      error: `WSFS HTTP ${r.status}`,
+      point,
+      url,
+    }), { status: 502, headers: CORS });
+  }
+  
+  const d = await r.json();
+  return new Response(JSON.stringify({
+    source: 'SYKE WSFS',
+    point,
+    ...d,
+  }), { headers: CORS });
+}
+
