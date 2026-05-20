@@ -5,9 +5,6 @@ on:
     - cron: '0 5 * * *'
   workflow_dispatch:
 
-env:
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
-
 jobs:
   fetch:
     runs-on: ubuntu-latest
@@ -20,6 +17,7 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           ref: main
+          fetch-depth: 0
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -39,5 +37,7 @@ jobs:
           git config user.name "ACI-HEM-bot"
           git config user.email "action@github.com"
           git add data/cache/
-          git diff --staged --quiet || git commit -m "auto: päivitä HEM-datacache [skip ci]"
-          git push --force-with-lease origin HEAD:main
+          git diff --staged --quiet && echo "Ei muutoksia" && exit 0
+          git commit -m "auto: päivitä HEM-datacache [skip ci]"
+          git pull --rebase=false -s ours origin main || true
+          git push origin main
