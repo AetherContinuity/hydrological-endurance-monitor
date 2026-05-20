@@ -48,4 +48,5 @@ jobs:
           git config user.email "action@github.com"
           git add data/cache/
           git diff --staged --quiet || git commit -m "auto: päivitä HEM-datacache [skip ci]"
+          git pull --rebase origin main
           git push
