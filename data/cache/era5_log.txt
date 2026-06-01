@@ -1,10 +1,10 @@
-2026-05-12 04:59:48,892 INFO [2025-12-11T00:00:00] Please note that a dedicated catalogue entry for this dataset, post-processed and stored in Analysis Ready Cloud Optimized (ARCO) format (Zarr), is available for optimised time-series retrievals (i.e. for retrieving data from selected variables for a single point over an extended period of time in an efficient way). You can discover it [here](https://cds.climate.copernicus.eu/datasets/reanalysis-era5-land-timeseries?tab=overview)
-2026-05-12 04:59:48,892 INFO Request ID is a9756e9d-c408-4133-b0a6-2f54083457ca
-2026-05-12 04:59:49,076 INFO status has been updated to accepted
-2026-05-12 05:00:15,392 INFO status has been updated to running
-2026-05-12 05:00:26,943 INFO status has been updated to successful
-ERA5: 2026-05 → area [63.2, 26.5, 62.5, 27.2]
-cf050f6b6d8fed451f12a2707b0165fb.zip:   0%|          | 0.00/33.5k [00:00<?, ?B/s]cf050f6b6d8fed451f12a2707b0165fb.zip: 100%|██████████| 33.5k/33.5k [00:00<00:00, 42.9kB/s]                                                                                          Ladattu: 34 KB
-Purettu: data/era5_raw/era5_2026_05_x.nc
-Jäsennetty: 6 päivää
-OK: 6 päivää cachessa (2026-05-01 → 2026-05-06)
+2026-06-01 08:25:36,741 INFO [2025-12-11T00:00:00] Please note that a dedicated catalogue entry for this dataset, post-processed and stored in Analysis Ready Cloud Optimized (ARCO) format (Zarr), is available for optimised time-series retrievals (i.e. for retrieving data from selected variables for a single point over an extended period of time in an efficient way). You can discover it [here](https://cds.climate.copernicus.eu/datasets/reanalysis-era5-land-timeseries?tab=overview)
+2026-06-01 08:25:36,742 INFO Request ID is a08302de-a170-4e1f-a803-169caeb3918f
+2026-06-01 08:25:36,922 INFO status has been updated to accepted
+2026-06-01 08:25:54,791 INFO status has been updated to failed
+ERA5: 2026-06 → area [63.2, 26.5, 62.5, 27.2]
+ERA5 virhe: 400 Client Error: Bad Request for url: https://cds.climate.copernicus.eu/api/retrieve/v1/jobs/a08302de-a170-4e1f-a803-169caeb3918f/results
+The job has failed
+None of the data you have requested is available yet, please revise the period requested. The latest date available for this dataset is: 2026-05-27 08:00
+The job failed with: MultiAdaptorNoDataError
+The 'format' key for requests is deprecated, please use 'data_format' instead. Use of 'format' is no longer part of the system testing, therefore it is not guaranteed to work.
