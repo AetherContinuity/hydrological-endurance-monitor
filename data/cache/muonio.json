@@ -4,13 +4,13 @@
   "river": "Muonionjoki",
   "location": "Muonio",
   "basin": "Tornionjoki 67",
-  "fetched": "2026-06-05",
-  "forecast_central_m": 231.35,
+  "fetched": "2026-06-06",
+  "forecast_central_m": 231.4,
   "f14": {
-    "peak_date_mean": "10.6.2026",
-    "peak_wl_mean": 231.35,
-    "peak_p5": 231.3,
-    "peak_p95": 231.62,
+    "peak_date_mean": "9.6.2026",
+    "peak_wl_mean": 231.4,
+    "peak_p5": 231.36,
+    "peak_p95": 231.52,
     "ref_years": "1938-2025",
     "ref_mean_max": 232.57,
     "ref_min_max": 231.45,
@@ -18,9 +18,9 @@
     "mhw_date": "10.06.1968"
   },
   "f90": {
-    "peak_date_mean": "19.6.2026",
-    "peak_wl_mean": 231.47,
-    "peak_p5": 231.3,
+    "peak_date_mean": "17.6.2026",
+    "peak_wl_mean": 231.45,
+    "peak_p5": 231.36,
     "peak_p95": 231.96,
     "ref_years": "1938-2025",
     "ref_mean_max": 232.57,
@@ -29,9 +29,9 @@
     "mhw_date": "10.06.1968"
   },
   "f365": {
-    "peak_date_mean": "23.5.2027",
-    "peak_wl_mean": 232.1,
-    "peak_p5": 231.53,
+    "peak_date_mean": "24.5.2027",
+    "peak_wl_mean": 232.11,
+    "peak_p5": 231.67,
     "peak_p95": 232.68,
     "ref_years": "1938-2025",
     "ref_mean_max": 232.57,
@@ -39,5 +39,5 @@
     "mhw_m": 233.79,
     "mhw_date": "10.06.1968"
   },
-  "peak_date_mean": "10.6.2026"
+  "peak_date_mean": "9.6.2026"
 }
