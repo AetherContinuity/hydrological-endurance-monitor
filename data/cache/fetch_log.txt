@@ -86,13 +86,13 @@ FMI place=Kuopio 10 vuotta (1940-2026)
   2023: +730 riviä (tday=365)
   2024: +732 riviä (tday=366)
   2025: +730 riviä (tday=365)
-  2026: +400 riviä (tday=200)
-FMI Kuopio: 47984 riviä
-OK fmi.json (47984 riviä · Kuopio)
+  2026: +402 riviä (tday=201)
+FMI Kuopio: 47986 riviä
+OK fmi.json (47986 riviä · Kuopio)
 DONE
-wqfi.html virhe: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: certificate has expired (_ssl.c:1010)>
-wlsanafi.html virhe: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: certificate has expired (_ssl.c:1010)>
-wksanafi.html virhe: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: certificate has expired (_ssl.c:1010)>
-wsanafi.html virhe: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: certificate has expired (_ssl.c:1010)>
+wqfi: None m, huippu None
+wlsanafi.html: 230.99 m (3.8.2026)
+wksanafi.html: 231.29 m (21.8.2026)
+wsanafi.html: 232.14 m (24.5.2027)
 
 OK muonio.json
