@@ -1,10 +1,10 @@
-2026-07-01 07:03:56,368 INFO Request ID is 8e599817-bbf4-4089-9f3c-225a92ec9a24
-2026-07-01 07:03:56,561 INFO status has been updated to accepted
-2026-07-01 07:04:18,551 INFO status has been updated to running
-2026-07-01 07:04:30,124 INFO status has been updated to failed
-ERA5: 2026-07 → area [63.2, 26.5, 62.5, 27.2]
-ERA5 virhe: 400 Client Error: Bad Request for url: https://cds.climate.copernicus.eu/api/retrieve/v1/jobs/8e599817-bbf4-4089-9f3c-225a92ec9a24/results
+2026-08-01 05:45:20,854 INFO Request ID is 40e25d12-9226-45fd-8d81-496906844965
+2026-08-01 05:45:21,191 INFO status has been updated to accepted
+2026-08-01 05:45:35,199 INFO status has been updated to running
+2026-08-01 05:45:42,907 INFO status has been updated to failed
+ERA5: 2026-08 → area [63.2, 26.5, 62.5, 27.2]
+ERA5 virhe: 400 Client Error: Bad Request for url: https://cds.climate.copernicus.eu/api/retrieve/v1/jobs/40e25d12-9226-45fd-8d81-496906844965/results
 The job has failed
-The 'format' key for requests is deprecated, please use 'data_format' instead. Use of 'format' is no longer part of the system testing, therefore it is not guaranteed to work.
-None of the data you have requested is available yet, please revise the period requested. The latest date available for this dataset is: 2026-06-26 07:00
 The job failed with: MultiAdaptorNoDataError
+The 'format' key for requests is deprecated, please use 'data_format' instead. Use of 'format' is no longer part of the system testing, therefore it is not guaranteed to work.
+None of the data you have requested is available yet, please revise the period requested. The latest date available for this dataset is: 2026-07-27 05:00
