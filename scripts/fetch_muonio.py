@@ -1,5 +1,21 @@
 """Muonionjoki Muonio WSFS — vedenkorkeus + sanallinen ennuste
-Sama rakenne kuin fetch_iisvesi.py, eri BASE-URL ja vesistöalue."""
+Sama rakenne kuin fetch_iisvesi.py, eri BASE-URL ja vesistöalue.
+
+HEM-korjaus 2026-09 (§02b): sama vuodenaikavirhe kuin Iisvedessä (item 1) —
+forecast_central_m kaytettiin "nykyisena" arvona. EI KORJATTU TASSA: Muonion
+havaintoasema Paikka_Id ei ole tiedossa (WSFS-pisteen 'q6700800y' ja SYKE
+Hydrologiarajapinnan numeerisen Paikka_Id:n valilla ei ole suoraa yhteytta,
+ja tata ei voitu selvittaa tasta ymparistosta - verkkoyhteys
+rajapinnat.ymparisto.fi:hyn on estetty). Selvita Paikka_Id ajamalla:
+
+    GET {proxy}/syke/paikat  (jos reitti listaa Muonion)
+  tai suoraan:
+    {proxy}/syke?entity=Paikka&$filter=substringof('Muonio',Nimi)
+
+kun Paikka_Id on selvinnyt, kopioi fetch_iisvesi.py:n arvo_to_m/
+fetch_syke_series/compute_observed-mekanismi tahan samalla kaavalla (nollakohta
+on todennakoisesti ERI kuin Iisvedella - Muonion MNW/MHW on n. 231-234 m,
+ei 97-98 m, joten ZERO_POINT_M-hypoteesi pitaa maarittaa erikseen)."""
 import urllib.request, re, json, os, html as html_mod
 from datetime import date
 
