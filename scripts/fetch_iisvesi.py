@@ -23,6 +23,20 @@ SUURE_ID = 1
 # Korkeustaso/VedenkTasoTieto-metadatasta (ei verkkoyhteytta siihen tasta
 # ymparistosta) - tarkista ensimmaisen live-ajon tulos ennen kuin
 # luotetaan tahan arvoon tuotannossa.
+#
+# RISTIINTARKISTUSPISTE (2026-09-17, vesi.fi/paikallisvesitilanne, asema
+# "Niinivesi Nokisenkoski, 0.0 km" = sama piste kuin Paikka_Id 1966):
+# havaittu vedenkorkeus 97.85 m, JARJESTELMA MERKITTY N2000. NORM/MNW/MHW
+# -vakiot tassa tiedostossa (98.01/97.45/98.01) tulevat vanhalta WSFS-
+# sivulta ja on merkitty "m NN" - Suomessa tama tarkoittaa usein N60:ta,
+# EI N2000:ta. N60->N2000-korjaus talla seudulla on luokkaa 0.2-0.3 m,
+# joka SD:n 0.90 m -jakajalla on 22-33% virhe - EI vahingottomasti pieni.
+# Kun ensimmainen live-ajo tuottaa observed_m:n, VERTAA sita vesi.fi:n
+# ajankohtaiseen lukemaan (paikallisvesitilanne-sivu, hae "Iisvesi"):
+# jos ne tasmaavat suoraan (+-cm), jarjestelmat ovat yhtenevat eika
+# korjausta tarvita; jos ero on ~0.2-0.3 m, kyseessa on N60/N2000-ero ja
+# se pitaa korjata joko ZERO_POINT_M:aan tai NORM/MNW/MHW-vakioihin
+# (HEM-monitor.html), ei molempiin.
 ZERO_POINT_M = 96.92
 
 NORM_M = 98.01  # keskimaarainen vuotuinen kevathuippu, WSFS ka 1910-2025
