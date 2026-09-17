@@ -61,20 +61,26 @@ def fetch_syke_paged(entity, filt, orderby='Aika asc', page_size=1000, max_pages
     return out
 
 def fetch_zero_point_m(paikka_id):
-    """Ei turvallista fallbackia Muoniolle (ei riippumattomasti
-    vahvistettu) - epaonnistuessa palauttaa (None, False)."""
+    """Kentat vahvistettu Iisvedelle 2026-09-17 (Paikka_Id, Korkeustaso_Id,
+    TasoKoordinaatisto, Tasokorjaus cm) - oletetaan sama skeema Muoniolle,
+    EI erikseen vahvistettu. Ei turvallista fallback-arvoa - epaonnistuessa
+    palauttaa (None, False), ei arvausta."""
     filt = f"Paikka_Id eq {paikka_id}"
     rows = fetch_syke_paged('VedenkTasoTieto', filt, orderby=None, page_size=50, max_pages=1)
     if not rows:
-        print(f'  Muonio VedenkTasoTieto tyhja/epaonnistui - ei nollakohtaa')
+        print(f'  VAROITUS: Muonio VedenkTasoTieto tyhja (Paikka_Id={paikka_id}) - ei nollakohtaa')
         return None, False
     for row in rows:
-        if any(isinstance(v, str) and v.strip().upper() == 'NN' for v in row.values()):
-            nums = [v for v in row.values() if isinstance(v, (int, float))]
-            if nums:
-                print(f'  Muonio VedenkTasoTieto: NN-nollakohta {nums[0]} (raaka rivi: {row})')
-                return float(nums[0]), True
-    print(f'  Muonio VedenkTasoTieto: NN-rivia ei tunnistettu, raaka vastaus: {rows}')
+        if str(row.get('TasoKoordinaatisto', '')).strip().upper() == 'NN':
+            tasokorjaus = row.get('Tasokorjaus')
+            if tasokorjaus is not None:
+                try:
+                    zero_m = float(tasokorjaus) / 100.0
+                    print(f'  Muonio VedenkTasoTieto: NN-nollakohta {zero_m} m (Tasokorjaus={tasokorjaus} cm)')
+                    return zero_m, True
+                except (TypeError, ValueError):
+                    pass
+    print(f'  VAROITUS: Muonio VedenkTasoTieto ei sisaltanyt NN-rivia, raaka vastaus: {rows}')
     return None, False
 
 def fetch_syke_series(paikka_id, suure_id, start_dt, end_dt, zero_point_m):
@@ -107,16 +113,20 @@ def compute_observed(today, norm_m):
         'sd_kevat': None,
         'doy_avg_m': None, 'doy_ref_years': f'{DOY_REF_START_YEAR}-{DOY_REF_END_YEAR}',
         'doy_ref_n_years': 0, 'sd_nyt': None,
+        'data_errors': [],
     }
     zero_point_m, verified = fetch_zero_point_m(PAIKKA_ID_WL)
     result['zero_point_m'], result['zero_point_verified'] = zero_point_m, verified
     if zero_point_m is None:
+        result['data_errors'].append('zero_point_m: VedenkTasoTieto ei antanut NN-riviä')
         return result  # ei arvausta - kaikki muu jaa None:ksi
 
     recent = fetch_syke_series(PAIKKA_ID_WL, SUURE_ID_WL, today - timedelta(days=14), today, zero_point_m)
     if recent:
         result['observed_m'] = recent[-1]['m']
         result['observed_date'] = recent[-1]['date']
+    else:
+        result['data_errors'].append('observed_m: Vedenkorkeus-haku tyhjä (viim. 14pv)')
 
     if norm_m is not None:
         spring_start = date(today.year, 3, 1)
@@ -128,6 +138,8 @@ def compute_observed(today, norm_m):
                 result['spring_peak_m'] = peak['m']
                 result['spring_peak_locked'] = today > date(today.year, 7, 31)
                 result['sd_kevat'] = round(max(0, min(1, (norm_m - peak['m']) / 0.90)), 3)
+            else:
+                result['data_errors'].append(f'spring_peak_m: Vedenkorkeus-haku tyhjä ({spring_start}..{spring_end})')
 
     doy_filt = (
         f"Paikka_Id eq {PAIKKA_ID_WL} and Suure_Id eq {SUURE_ID_WL}"
@@ -135,6 +147,8 @@ def compute_observed(today, norm_m):
         f" and year(Aika) ge {DOY_REF_START_YEAR} and year(Aika) le {DOY_REF_END_YEAR}"
     )
     doy_rows = fetch_syke_paged('Vedenkorkeus', doy_filt)
+    if not doy_rows:
+        result['data_errors'].append(f'doy_avg_m: Vedenkorkeus-haku tyhjä ({doy_filt})')
     doy_values = []
     for r in doy_rows:
         try:
@@ -146,6 +160,9 @@ def compute_observed(today, norm_m):
         result['doy_ref_n_years'] = len(doy_values)
         if result['observed_m'] is not None:
             result['sd_nyt'] = round(max(0, min(1, (result['doy_avg_m'] - result['observed_m']) / 0.90)), 3)
+
+    if result['data_errors']:
+        print(f"  data_errors: {result['data_errors']}")
 
     return result
 

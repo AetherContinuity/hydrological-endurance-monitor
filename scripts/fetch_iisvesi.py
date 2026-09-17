@@ -32,9 +32,11 @@ SUURE_ID_Q = 2
 # 1942 kevaan huipun kautta (NN 97.37 m havainnoista vs. HEM:n ennatys
 # 97.36 m). Aiempi ZERO_POINT_M=96.92-hypoteesi oli 4 cm pielessa.
 # Silti EI kovakoodattu kiinteaksi vakioksi: haetaan ajon aikana
-# VedenkTasoTieto-entiteetista (ohje 2), NN_FALLBACK_ZERO_M kaytetaan
-# vain jos dynaaminen haku/jasennys epaonnistuu (kenttanimet SYKE:n
-# VedenkTasoTieto-vastauksessa eivat olleet tiedossa tata kirjoittaessa).
+# VedenkTasoTieto-entiteetista (ohje 2). Kentat VAHVISTETTU 2026-09-17:
+# Paikka_Id, Korkeustaso_Id, TasoKoordinaatisto ("NN"/"N60"/"N2000"),
+# Tasokorjaus (SENTTIMETREINA, esim. 9688 -> 96.88 m). NN_FALLBACK_ZERO_M
+# kaytetaan vain jos dynaaminen haku/jasennys epaonnistuu (esim. verkko-
+# tai skeemamuutos).
 NN_FALLBACK_ZERO_M = 96.88
 
 NORM_M = 98.01  # keskimaarainen vuotuinen kevathuippu, WSFS ka 1910-2025 (NN)
@@ -85,47 +87,73 @@ def fetch_syke_paged(entity, filt, orderby='Aika asc', page_size=1000, max_pages
     return out
 
 def fetch_zero_point_m(paikka_id):
-    """Hakee NN-nollakohdan VedenkTasoTieto-entiteetista ajon aikana, EI
-    kovakoodattuna (kayttajan ohje 2). Kenttanimet (jarjestelma/arvo)
-    eivat olleet tiedossa tata kirjoittaessa - jos automaattinen
-    tunnistus epaonnistuu, tulostetaan raaka vastaus lokiin JA kaytetaan
-    NN_FALLBACK_ZERO_M:aa (vahvistettu 2026-09-17) jotta ajo ei kaadu."""
+    """Hakee NN-nollakohdan VedenkTasoTieto-entiteetista ajon aikana.
+    Kentat vahvistettu 2026-09-17: Paikka_Id, Korkeustaso_Id,
+    TasoKoordinaatisto, Tasokorjaus (cm). Valitaan rivi jossa
+    TasoKoordinaatisto=='NN'. NN_FALLBACK_ZERO_M kaytetaan vain jos
+    haku epaonnistuu tai NN-rivia ei loydy (esim. skeemamuutos) -
+    TAMA ON POIKKEUSTILANNE, kirjataan aina nakyvasti lokiin (ohje 4:
+    tyhja/odottamaton vastaus ei saa kulkea hiljaa eteenpain)."""
     filt = f"Paikka_Id eq {paikka_id}"
     rows = fetch_syke_paged('VedenkTasoTieto', filt, orderby=None, page_size=50, max_pages=1)
     if not rows:
-        print(f'  VedenkTasoTieto tyhja/epaonnistui - fallback NN={NN_FALLBACK_ZERO_M}')
+        print(f'  VIRHE: VedenkTasoTieto palautti TYHJAN vastauksen Paikka_Id={paikka_id} '
+              f'- fallback NN={NN_FALLBACK_ZERO_M} (TARKISTA MANUAALISESTI)')
         return NN_FALLBACK_ZERO_M, False
     for row in rows:
-        # etsi rivi/kentta joka merkitsee "NN"-jarjestelman, ja numeerinen
-        # arvo samalta rivilta. Spekulatiivinen - loki nayttaa raa'an
-        # rivin jos tama ei osu, jotta kentat voi tarkistaa kasin.
-        if any(isinstance(v, str) and v.strip().upper() == 'NN' for v in row.values()):
-            nums = [v for v in row.values() if isinstance(v, (int, float))]
-            if nums:
-                print(f'  VedenkTasoTieto: NN-nollakohta {nums[0]} (raaka rivi: {row})')
-                return float(nums[0]), True
-    print(f'  VedenkTasoTieto: NN-rivia ei tunnistettu automaattisesti, raaka vastaus: {rows} '
-          f'- fallback NN={NN_FALLBACK_ZERO_M} (tarkista kentat kasin lokista)')
+        if str(row.get('TasoKoordinaatisto', '')).strip().upper() == 'NN':
+            tasokorjaus = row.get('Tasokorjaus')
+            if tasokorjaus is not None:
+                try:
+                    zero_m = float(tasokorjaus) / 100.0
+                    print(f'  VedenkTasoTieto: NN-nollakohta {zero_m} m (Tasokorjaus={tasokorjaus} cm, Paikka_Id={paikka_id})')
+                    return zero_m, True
+                except (TypeError, ValueError):
+                    pass
+    print(f'  VIRHE: VedenkTasoTieto ei sisaltanyt NN-rivia (Paikka_Id={paikka_id}), raaka vastaus: {rows} '
+          f'- fallback NN={NN_FALLBACK_ZERO_M} (TARKISTA MANUAALISESTI)')
     return NN_FALLBACK_ZERO_M, False
 
+LIPPU_FALLBACK = {108: 'Hetkellisia arvoja puuttuu (vuorokausiarvo laskettu vajaasta datasta, EI virheellinen)'}
+
+def fetch_lippu_description(lippu_id):
+    """Hakee Lippu-taulusta LippuKoodi/Kuvaus lippu_id:lle (ohje 3).
+    Palauttaa fallback-tekstin jos haku epaonnistuu, ei jata tyhjaksi."""
+    if lippu_id is None:
+        return None
+    try:
+        rows = fetch_syke_paged('Lippu', f'Lippu_id eq {lippu_id}', orderby=None, page_size=10, max_pages=1)
+        if rows and rows[0].get('Kuvaus'):
+            return rows[0]['Kuvaus']
+    except Exception as e:
+        print(f'  Lippu-kuvauksen haku epaonnistui ({lippu_id}): {e}')
+    return LIPPU_FALLBACK.get(int(lippu_id), f'Lippu_id={lippu_id} (kuvaus ei saatavilla)')
+
 def fetch_syke_series(paikka_id, suure_id, start_dt, end_dt, zero_point_m=None, is_flow=False):
-    """Hakee havaitun sarjan (vedenkorkeus tai virtaama) aci-nve-proxyn
-    /syke-reitin kautta, sivutettuna. OData v3: EI $format-parametria,
-    paivamaarat datetime'YYYY-MM-DDTHH:MM:SS'. Palauttaa myos raakarivin
-    (raw) jotta esim. Lippu_Id-tyyppiset laatumerkinnat nakyvat (ohje 5)."""
+    """Hakee havaitun sarjan aci-nve-proxyn /syke-reitin kautta, sivutettuna.
+    Entiteetti VAHVISTETTU 2026-09-17 eri virtaamalle ja vedenkorkeudelle:
+    Vedenkorkeus?$filter=Paikka_Id eq 1005 palauttaa TYHJAN listan - virtaama
+    on omassa Virtaama-entiteetissaan (ohje 1, korjattu virhe). OData v3:
+    EI $format-parametria, paivamaarat datetime'YYYY-MM-DDTHH:MM:SS'.
+    Palauttaa myos raakarivin (raw) laatumerkintojen tarkistamiseksi."""
+    entity = 'Virtaama' if is_flow else 'Vedenkorkeus'
     filt = (
         f"Paikka_Id eq {paikka_id} and Suure_Id eq {suure_id}"
         f" and Aika ge datetime'{start_dt:%Y-%m-%d}T00:00:00'"
         f" and Aika le datetime'{end_dt:%Y-%m-%d}T23:59:59'"
     )
-    rows = fetch_syke_paged('Vedenkorkeus', filt)  # entiteetin nimi olettaen sama myos virtaamalle - EI VARMISTETTU
+    rows = fetch_syke_paged(entity, filt)
+    if not rows:
+        print(f'  VAROITUS: {entity} palautti TYHJAN vastauksen '
+              f'(Paikka_Id={paikka_id}, Suure_Id={suure_id}, {start_dt.date()}..{end_dt.date()})')
+        return []
     out = []
     for r in rows:
         arvo, aika = r.get('Arvo'), r.get('Aika')
         if arvo is None or aika is None:
             continue
         try:
-            val = float(arvo)  # Arvo voi palautua merkkijonona (Decimal)
+            val = float(arvo)  # Arvo palautuu merkkijonona (Decimal)
         except (TypeError, ValueError):
             continue
         if is_flow:
@@ -136,16 +164,16 @@ def fetch_syke_series(paikka_id, suure_id, start_dt, end_dt, zero_point_m=None, 
     return out
 
 def flag_provisional(rows):
-    """Ohje 5: tuoreimmalla rivilla nahty Lippu_Id=108 -> todennakoisesti
-    alustava/tarkistamaton arvo. Kenttanimi ei varmistettu - etsitaan mika
-    tahansa 'lippu'-alkuinen avain viimeisimmalta rivilta ja merkitaan
-    nakyviin sellaisenaan, EI tulkita arvon merkitysta."""
+    """Ohje 3: kentta on Lippu_id (pieni d) datarivilla. 108 = "Hetkellisia
+    arvoja puuttuu" - vuorokausiarvo laskettu vajaasta datasta, EI
+    virheellinen. Haetaan kuvaus Lippu-taulusta, merkitaan nakyviin,
+    EI hylata arvoa."""
     if not rows:
         return None
     last_raw = rows[-1].get('raw', {})
     for k, v in last_raw.items():
         if 'lippu' in k.lower() and v not in (None, 0, '0'):
-            return {'field': k, 'value': v}
+            return {'field': k, 'value': v, 'description': fetch_lippu_description(v)}
     return None
 
 def compute_observed(today):
@@ -163,6 +191,7 @@ def compute_observed(today):
         'sd_nyt': None,
         'flow_m3s': None, 'flow_date': None, 'flow_doy_median_m3s': None,
         'flow_doy_n_years': 0, 'rf_flow': None,
+        'data_errors': [],  # ohje 4: tyhja vastaus kirjataan tanne, ei kulje hiljaa eteenpain
     }
 
     # 1) Viimeisin havainto (viim. 14 pv) + laatumerkinta
@@ -172,6 +201,8 @@ def compute_observed(today):
         result['observed_m'] = last['value']
         result['observed_date'] = last['date']
         result['observed_provisional'] = flag_provisional(recent)
+    else:
+        result['data_errors'].append('observed_m: Vedenkorkeus-haku tyhja (viim. 14pv)')
 
     # 2) Kevaan huippu (maalis-heinakuu, kuluva vuosi). Lukittu automaattisesti
     #    heinakuun jalkeen, koska ikkunan ulkopuolelle ei enaa tule havaintoja.
@@ -184,6 +215,8 @@ def compute_observed(today):
             result['spring_peak_m'] = peak['value']
             result['spring_peak_locked'] = today > date(today.year, 7, 31)
             result['sd_kevat'] = round(max(0, min(1, (NORM_M - peak['value']) / 0.90)), 3)
+        else:
+            result['data_errors'].append(f'spring_peak_m: Vedenkorkeus-haku tyhja ({spring_start}..{spring_end})')
 
     # 3) Saman vuodenpaivan pitka aikavali - YKSI kutsu month()/day()-
     #    suodattimella koko 116v sarjaan, rajattuna referenssikauteen
@@ -194,6 +227,8 @@ def compute_observed(today):
         f" and year(Aika) ge {DOY_REF_START_YEAR} and year(Aika) le {DOY_REF_END_YEAR}"
     )
     doy_rows = fetch_syke_paged('Vedenkorkeus', doy_filt)
+    if not doy_rows:
+        result['data_errors'].append(f'doy_avg_m: Vedenkorkeus-haku tyhja ({doy_filt})')
     doy_values = []
     for r in doy_rows:
         try:
@@ -209,18 +244,24 @@ def compute_observed(today):
     # 4) Virtaama (Nokisenkoski, Paikka_Id 1005) - RF-komponentiksi, EI
     #    erilliseksi SD-tyyppiseksi komponentiksi (sama signaali kuin
     #    vedenkorkeus saannostelemattomassa jarvessa - ohje 9).
+    #    ENTITEETTI Virtaama, EI Vedenkorkeus (ohje 1 - korjattu virhe:
+    #    Vedenkorkeus?$filter=Paikka_Id eq 1005 palautti tyhjan listan).
     flow_recent = fetch_syke_series(PAIKKA_ID_Q, SUURE_ID_Q, today - timedelta(days=14), today, is_flow=True)
     if flow_recent:
         last_q = flow_recent[-1]
         result['flow_m3s'] = last_q['value']
         result['flow_date'] = last_q['date']
+    else:
+        result['data_errors'].append('flow_m3s: Virtaama-haku tyhja (viim. 14pv)')
 
     flow_doy_filt = (
         f"Paikka_Id eq {PAIKKA_ID_Q} and Suure_Id eq {SUURE_ID_Q}"
         f" and month(Aika) eq {today.month} and day(Aika) eq {today.day}"
         f" and year(Aika) ge 1994"
     )
-    flow_doy_rows = fetch_syke_paged('Vedenkorkeus', flow_doy_filt)
+    flow_doy_rows = fetch_syke_paged('Virtaama', flow_doy_filt)
+    if not flow_doy_rows:
+        result['data_errors'].append(f'flow_doy_median_m3s: Virtaama-haku tyhja ({flow_doy_filt})')
     flow_doy_values = []
     for r in flow_doy_rows:
         try:
@@ -235,6 +276,9 @@ def compute_observed(today):
         result['flow_doy_n_years'] = n
         if result['flow_m3s'] is not None and median > 0:
             result['rf_flow'] = round(max(0, min(1, 1 - result['flow_m3s'] / median)), 3)
+
+    if result['data_errors']:
+        print(f"  data_errors: {result['data_errors']}")
 
     return result
 
