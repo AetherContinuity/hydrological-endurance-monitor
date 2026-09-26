@@ -86,13 +86,13 @@ FMI place=Kuopio 10 vuotta (1940-2026)
   2023: +730 riviä (tday=365)
   2024: +732 riviä (tday=366)
   2025: +730 riviä (tday=365)
-  2026: +534 riviä (tday=267)
-FMI Kuopio: 48118 riviä
-OK fmi.json (48118 riviä · Kuopio)
+  2026: +536 riviä (tday=268)
+FMI Kuopio: 48120 riviä
+OK fmi.json (48120 riviä · Kuopio)
 DONE
 wqfi: None m, huippu None
-wlsanafi.html: 231.26 m (29.9.2026)
-wksanafi.html: 231.36 m (18.10.2026)
-wsanafi.html: 232.21 m (24.5.2027)
+wlsanafi.html: 231.15 m (25.9.2026)
+wksanafi.html: 231.28 m (20.11.2026)
+wsanafi.html: 232.19 m (24.5.2027)
 
 OK muonio.json
