@@ -4,13 +4,13 @@
   "river": "Muonionjoki",
   "location": "Muonio",
   "basin": "Tornionjoki 67",
-  "fetched": "2026-09-30",
-  "forecast_central_m": 231.2,
+  "fetched": "2026-10-01",
+  "forecast_central_m": 231.18,
   "f14": {
-    "peak_date_mean": "29.9.2026",
-    "peak_wl_mean": 231.2,
-    "peak_p5": 231.2,
-    "peak_p95": 231.2,
+    "peak_date_mean": "30.9.2026",
+    "peak_wl_mean": 231.18,
+    "peak_p5": 231.18,
+    "peak_p95": 231.18,
     "ref_years": "1938-2025",
     "ref_mean_max": 232.57,
     "ref_min_max": 231.45,
@@ -18,10 +18,10 @@
     "mhw_date": "10.06.1968"
   },
   "f90": {
-    "peak_date_mean": "23.11.2026",
-    "peak_wl_mean": 231.27,
-    "peak_p5": 231.21,
-    "peak_p95": 231.48,
+    "peak_date_mean": "25.11.2026",
+    "peak_wl_mean": 231.26,
+    "peak_p5": 231.19,
+    "peak_p95": 231.44,
     "ref_years": "1938-2025",
     "ref_mean_max": 232.57,
     "ref_min_max": 231.45,
@@ -30,14 +30,30 @@
   },
   "f365": {
     "peak_date_mean": "24.5.2027",
-    "peak_wl_mean": 232.18,
-    "peak_p5": 231.7,
-    "peak_p95": 232.86,
+    "peak_wl_mean": 232.21,
+    "peak_p5": 231.72,
+    "peak_p95": 232.78,
     "ref_years": "1938-2025",
     "ref_mean_max": 232.57,
     "ref_min_max": 231.45,
     "mhw_m": 233.79,
     "mhw_date": "10.06.1968"
   },
-  "peak_date_mean": "29.9.2026"
+  "peak_date_mean": "30.9.2026",
+  "observed": {
+    "zero_point_m": null,
+    "zero_point_verified": false,
+    "observed_m": null,
+    "observed_date": null,
+    "spring_peak_m": null,
+    "spring_peak_locked": false,
+    "sd_kevat": null,
+    "doy_avg_m": null,
+    "doy_ref_years": "1991-2020",
+    "doy_ref_n_years": 0,
+    "sd_nyt": null,
+    "data_errors": [
+      "zero_point_m: VedenkTasoTieto ei antanut NN-riviä"
+    ]
+  }
 }

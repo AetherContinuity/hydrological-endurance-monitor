@@ -86,13 +86,45 @@ FMI place=Kuopio 10 vuotta (1940-2026)
   2023: +730 riviä (tday=365)
   2024: +732 riviä (tday=366)
   2025: +730 riviä (tday=365)
-  2026: +544 riviä (tday=272)
-FMI Kuopio: 48128 riviä
-OK fmi.json (48128 riviä · Kuopio)
+  2026: +546 riviä (tday=273)
+FMI Kuopio: 48130 riviä
+OK fmi.json (48130 riviä · Kuopio)
 DONE
 wqfi: None m, huippu None
-wlsanafi.html: 231.2 m (29.9.2026)
-wksanafi.html: 231.27 m (23.11.2026)
-wsanafi.html: 232.18 m (24.5.2027)
+wlsanafi.html: 231.18 m (30.9.2026)
+wksanafi.html: 231.26 m (25.11.2026)
+wsanafi.html: 232.21 m (24.5.2027)
+
+SYKE havaintosarja (Paikka_Id 2532):
+  VAROITUS: Muonio VedenkTasoTieto ei sisaltanyt NN-rivia, raaka vastaus: [{'Paikka_Id': 2532, 'Korkeustaso_Id': 4, 'TasoKoordinaatisto': 'LN', 'Tasokorjaus': 22997}, {'Paikka_Id': 2532, 'Korkeustaso_Id': 5, 'TasoKoordinaatisto': 'N2000', 'Tasokorjaus': 23035}, {'Paikka_Id': 2532, 'Korkeustaso_Id': 2, 'TasoKoordinaatisto': 'N43', 'Tasokorjaus': 22983}, {'Paikka_Id': 2532, 'Korkeustaso_Id': 1, 'TasoKoordinaatisto': 'N60', 'Tasokorjaus': 23005}]
+  observed_m=None (None, nollakohta=None) sd_kevat=None sd_nyt=None
 
 OK muonio.json
+wqfi: None m, huippu None
+wlsanafi.html: huippu 97.41 m (14.10.2026)
+  15.10.: 97.41 m (p25=97.4 p75=97.43)
+  01.11.: 97.45 m (p25=97.42 p75=97.5)
+  01.12.: 97.59 m (p25=97.52 p75=97.66)
+  01.01.: 97.68 m (p25=97.59 p75=97.77)
+wksanafi.html: huippu 97.68 m (30.12.2026)
+  15.10.: 97.41 m (p25=97.4 p75=97.43)
+  01.11.: 97.45 m (p25=97.42 p75=97.5)
+  01.12.: 97.59 m (p25=97.52 p75=97.66)
+  01.01.: 97.68 m (p25=97.59 p75=97.77)
+w3sanafi.html: huippu 98.02 m (20.5.2027)
+  15.10.: 97.41 m (p25=97.4 p75=97.43)
+  01.11.: 97.45 m (p25=97.42 p75=97.5)
+  01.12.: 97.59 m (p25=97.52 p75=97.66)
+  01.01.: 97.68 m (p25=97.59 p75=97.77)
+
+GraafiSivu-testaus:
+  period=100x365: 2184b, wl:0, vuosia:0
+  period=50x365: 2184b, wl:0, vuosia:0
+  period=10x365: 2184b, wl:0, vuosia:0
+
+SYKE havaintosarja (Paikka_Id 1966, Suure_Id 1):
+  VedenkTasoTieto: NN-nollakohta 96.88 m (Tasokorjaus=9688 cm, Paikka_Id=1966)
+  SYKE-sivu skip=0 epaonnistui: HTTP Error 502: Bad Gateway
+  havaintohaku epaonnistui: 'datetime.date' object has no attribute 'date'
+
+OK iisvesi.json
