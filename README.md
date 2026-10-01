@@ -58,6 +58,34 @@ python main.py
 
 Outputs: `reports/figures/hepp.png`, `outputs/metrics.json`
 
+## SYKE-asemat (scripts/fetch_iisvesi.py, fetch_muonio.py)
+
+Vahvistettu 2026-09-17 (kayttaja, suora SYKE Hydrologiarajapinta-tarkistus
+aci-nve-proxyn `/syke`-reitin kautta):
+
+| Paikka_Id | Suure | Kohde | Kaytossa |
+|---|---|---|---|
+| 1966 | 1 (vedenkorkeus, cm) | Iisvesi | SD_kevät/SD_nyt (fetch_iisvesi.py) |
+| 1005 | 2 (virtaama, m³/s) | Nokisenkoski (Iisveden lasku-uoma) | RF (fetch_iisvesi.py) |
+| 2532 | 1 (vedenkorkeus, cm) | Muonionjoki Muonio (=WSFS q6700800y) | SD_kevät/SD_nyt (fetch_muonio.py) |
+
+Korkeusjärjestelmä asemalla 1966: NN = nollakohta + Arvo/100, nollakohta
+96.88 m (VedenkTasoTieto). HEM:n NORM/MNW/MHW-vakiot (HEM-monitor.html)
+ovat NN-järjestelmässä — EI N60 eikä N2000.
+
+**Löydetty, ei vielä käytössä** (vesitase/BEM-E-jatkotyötä varten):
+
+| Paikka_Id | Kohde | Mahdollinen käyttö |
+|---|---|---|
+| 1003 | Nilakka, Äyskoski (toiminnassa) | Iisveden päätulovirtaama — vesitase |
+| 3969 | Haringan pato (toiminnassa) | Iisvesi–Virmasvesi-jakouoma — merkitys vesitaseessa selvitettävä |
+| 3583 | Iisvesi, pintaveden lämpötila | BEM-E: NDCI-tulkinnan tuki (lämpötila vaikuttaa leväkasvuun) |
+| 277 | Iisvesi, jäätymis-/jäänlähtöpäivät | WEM-kytkentä (talvikauden pituus) |
+| 450 | Iisvesi, jäänpaksuus | — |
+
+Vesitase (tulovirtaama − lähtövirtaama ≈ varaston muutos + sadanta−haihdunta)
+ei ole toteutettu — seuraavan vaiheen työ.
+
 ## Status
 
 Research prototype — not an operational forecasting system.
