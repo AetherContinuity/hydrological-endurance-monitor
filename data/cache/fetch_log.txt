@@ -86,14 +86,14 @@ FMI place=Kuopio 10 vuotta (1940-2026)
   2023: +730 riviä (tday=365)
   2024: +732 riviä (tday=366)
   2025: +730 riviä (tday=365)
-  2026: +562 riviä (tday=281)
-FMI Kuopio: 48146 riviä
-OK fmi.json (48146 riviä · Kuopio)
+  2026: +564 riviä (tday=282)
+FMI Kuopio: 48148 riviä
+OK fmi.json (48148 riviä · Kuopio)
 DONE
 wqfi: None m, huippu None
-wlsanafi.html: 230.98 m (8.10.2026)
-wksanafi.html: 231.28 m (26.11.2026)
-wsanafi.html: 232.26 m (25.5.2027)
+wlsanafi.html: 230.96 m (9.10.2026)
+wksanafi.html: 231.27 m (23.11.2026)
+wsanafi.html: 232.29 m (25.5.2027)
 
 SYKE havaintosarja (Paikka_Id 2532):
   VAROITUS: Muonio VedenkTasoTieto ei sisaltanyt NN-rivia, raaka vastaus: [{'Paikka_Id': 2532, 'Korkeustaso_Id': 4, 'TasoKoordinaatisto': 'LN', 'Tasokorjaus': 22997}, {'Paikka_Id': 2532, 'Korkeustaso_Id': 5, 'TasoKoordinaatisto': 'N2000', 'Tasokorjaus': 23035}, {'Paikka_Id': 2532, 'Korkeustaso_Id': 2, 'TasoKoordinaatisto': 'N43', 'Tasokorjaus': 22983}, {'Paikka_Id': 2532, 'Korkeustaso_Id': 1, 'TasoKoordinaatisto': 'N60', 'Tasokorjaus': 23005}]
@@ -101,21 +101,21 @@ SYKE havaintosarja (Paikka_Id 2532):
 
 OK muonio.json
 wqfi: None m, huippu None
-wlsanafi.html: huippu 97.54 m (23.10.2026)
-  23.10.: 97.54 m (p25=97.52 p75=97.57)
-  09.11.: 97.64 m (p25=97.58 p75=97.7)
-  09.12.: 97.8 m (p25=97.71 p75=97.87)
-  09.01.: 97.84 m (p25=97.77 p75=97.91)
-wksanafi.html: huippu 97.85 m (2.1.2027)
-  23.10.: 97.54 m (p25=97.52 p75=97.57)
-  09.11.: 97.64 m (p25=97.58 p75=97.7)
-  09.12.: 97.8 m (p25=97.71 p75=97.87)
-  09.01.: 97.84 m (p25=97.77 p75=97.91)
-w3sanafi.html: huippu 98.07 m (18.5.2027)
-  23.10.: 97.54 m (p25=97.52 p75=97.57)
-  09.11.: 97.64 m (p25=97.58 p75=97.7)
-  09.12.: 97.8 m (p25=97.71 p75=97.87)
-  09.01.: 97.84 m (p25=97.77 p75=97.91)
+wlsanafi.html: huippu 97.5 m (24.10.2026)
+  24.10.: 97.5 m (p25=97.48 p75=97.53)
+  10.11.: 97.57 m (p25=97.53 p75=97.63)
+  10.12.: 97.74 m (p25=97.65 p75=97.82)
+  10.01.: 97.8 m (p25=97.7 p75=97.88)
+wksanafi.html: huippu 97.8 m (5.1.2027)
+  24.10.: 97.5 m (p25=97.48 p75=97.53)
+  10.11.: 97.57 m (p25=97.53 p75=97.63)
+  10.12.: 97.74 m (p25=97.65 p75=97.82)
+  10.01.: 97.8 m (p25=97.7 p75=97.88)
+w3sanafi.html: huippu 98.06 m (19.5.2027)
+  24.10.: 97.5 m (p25=97.48 p75=97.53)
+  10.11.: 97.57 m (p25=97.53 p75=97.63)
+  10.12.: 97.74 m (p25=97.65 p75=97.82)
+  10.01.: 97.8 m (p25=97.7 p75=97.88)
 
 GraafiSivu-testaus:
   period=100x365: 2184b, wl:0, vuosia:0
