@@ -58,9 +58,9 @@ def get(url):
     with urllib.request.urlopen(req, timeout=20) as r:
         return r.read()
 
-def fetch_syke_paged(entity, filt, orderby='Aika asc', page_size=1000, max_pages=50):
+def fetch_syke_paged(entity, filt, orderby='Aika asc', page_size=500, max_pages=50):
     """OData-haku aci-nve-proxyn /syke-reitin kautta, SIVUTETTUNA.
-    Palvelin rajoittaa vastauksen enintaan 1000 riviin per kutsu $top:sta
+    Palvelin rajoittaa vastauksen enintaan 500 riviin per kutsu (tarkistettu 2026-10-15; aiemmin havaittu 1000) $top:sta
     riippumatta (havaittu kayttajan omassa live-tarkistuksessa 2026-09-17) -
     tama iteroi $skip:lla kunnes sivu on vajaa tai max_pages tayttyy."""
     out = []
@@ -138,14 +138,14 @@ def fetch_syke_series(paikka_id, suure_id, start_dt, end_dt, zero_point_m=None, 
     Palauttaa myos raakarivin (raw) laatumerkintojen tarkistamiseksi."""
     entity = 'Virtaama' if is_flow else 'Vedenkorkeus'
     filt = (
-        f"Paikka_Id eq {paikka_id} and Suure_Id eq {suure_id}"
+        f"Paikka_Id eq {paikka_id}"
         f" and Aika ge datetime'{start_dt:%Y-%m-%d}T00:00:00'"
         f" and Aika le datetime'{end_dt:%Y-%m-%d}T23:59:59'"
     )
     rows = fetch_syke_paged(entity, filt)
     if not rows:
         print(f'  VAROITUS: {entity} palautti TYHJAN vastauksen '
-              f'(Paikka_Id={paikka_id}, Suure_Id={suure_id}, {start_dt.date()}..{end_dt.date()})')
+              f'(Paikka_Id={paikka_id}, Suure_Id={suure_id}, {start_dt}..{end_dt})')
         return []
     out = []
     for r in rows:
@@ -222,7 +222,7 @@ def compute_observed(today):
     #    suodattimella koko 116v sarjaan, rajattuna referenssikauteen
     #    (ohje 4 - ei enaa 10 vuoden +-5pv-otantaa, n=10 oli liian pieni).
     doy_filt = (
-        f"Paikka_Id eq {PAIKKA_ID_WL} and Suure_Id eq {SUURE_ID_WL}"
+        f"Paikka_Id eq {PAIKKA_ID_WL}"
         f" and month(Aika) eq {today.month} and day(Aika) eq {today.day}"
         f" and year(Aika) ge {DOY_REF_START_YEAR} and year(Aika) le {DOY_REF_END_YEAR}"
     )
@@ -255,7 +255,7 @@ def compute_observed(today):
         result['data_errors'].append('flow_m3s: Virtaama-haku tyhja (viim. 14pv)')
 
     flow_doy_filt = (
-        f"Paikka_Id eq {PAIKKA_ID_Q} and Suure_Id eq {SUURE_ID_Q}"
+        f"Paikka_Id eq {PAIKKA_ID_Q}"
         f" and month(Aika) eq {today.month} and day(Aika) eq {today.day}"
         f" and year(Aika) ge 1994"
     )

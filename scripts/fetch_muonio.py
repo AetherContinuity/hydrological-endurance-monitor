@@ -34,9 +34,9 @@ def get(url):
     with urllib.request.urlopen(req, timeout=20) as r:
         return r.read()
 
-def fetch_syke_paged(entity, filt, orderby='Aika asc', page_size=1000, max_pages=50):
+def fetch_syke_paged(entity, filt, orderby='Aika asc', page_size=500, max_pages=50):
     """Ks. fetch_iisvesi.py - sama sivutuslogiikka (palvelin rajoittaa
-    1000 riviin/kutsu $top:sta riippumatta)."""
+    500 riviin/kutsu $top:sta riippumatta, tarkistettu 2026-10-15)."""
     out = []
     skip = 0
     for _ in range(max_pages):
@@ -60,32 +60,37 @@ def fetch_syke_paged(entity, filt, orderby='Aika asc', page_size=1000, max_pages
         skip += page_size
     return out
 
+# Korkeusjarjestelma (2026-10-15): asemalla 2532 ei ole NN-rivia
+# (VedenkTasoTieto: LN 229,97, N43 229,83, N60 230,05, N2000 230,35). WSFS-sivun
+# vakiot ovat N60:ssa: havaintojen vuosimaksimien ka 1991-2020 on N60:ssa
+# 232,61 m vs. WSFS:n "ka" 232,57 m (LN 232,53, N2000 232,91). Ilman NN-rivia
+# kaytetaan siksi N60:ta, jotta havainto on vertailukelpoinen WSFS-vakioiden kanssa.
+PREFERRED_SYSTEMS = ('NN', 'N60')
+
 def fetch_zero_point_m(paikka_id):
-    """Kentat vahvistettu Iisvedelle 2026-09-17 (Paikka_Id, Korkeustaso_Id,
-    TasoKoordinaatisto, Tasokorjaus cm) - oletetaan sama skeema Muoniolle,
-    EI erikseen vahvistettu. Ei turvallista fallback-arvoa - epaonnistuessa
-    palauttaa (None, False), ei arvausta."""
+    """Palauttaa (nollakohta_m, vahvistettu, jarjestelma). Ei arvausta:
+    jos kumpaakaan jarjestelmaa ei loydy, (None, False, None)."""
     filt = f"Paikka_Id eq {paikka_id}"
     rows = fetch_syke_paged('VedenkTasoTieto', filt, orderby=None, page_size=50, max_pages=1)
     if not rows:
         print(f'  VAROITUS: Muonio VedenkTasoTieto tyhja (Paikka_Id={paikka_id}) - ei nollakohtaa')
-        return None, False
-    for row in rows:
-        if str(row.get('TasoKoordinaatisto', '')).strip().upper() == 'NN':
-            tasokorjaus = row.get('Tasokorjaus')
-            if tasokorjaus is not None:
-                try:
-                    zero_m = float(tasokorjaus) / 100.0
-                    print(f'  Muonio VedenkTasoTieto: NN-nollakohta {zero_m} m (Tasokorjaus={tasokorjaus} cm)')
-                    return zero_m, True
-                except (TypeError, ValueError):
-                    pass
-    print(f'  VAROITUS: Muonio VedenkTasoTieto ei sisaltanyt NN-rivia, raaka vastaus: {rows}')
-    return None, False
+        return None, False, None
+    by_sys = {str(r.get('TasoKoordinaatisto', '')).strip().upper(): r.get('Tasokorjaus') for r in rows}
+    for sysname in PREFERRED_SYSTEMS:
+        tk = by_sys.get(sysname)
+        if tk is not None:
+            try:
+                zero_m = float(tk) / 100.0
+                print(f'  Muonio VedenkTasoTieto: {sysname}-nollakohta {zero_m} m (Tasokorjaus={tk} cm)')
+                return zero_m, True, sysname
+            except (TypeError, ValueError):
+                pass
+    print(f'  VAROITUS: Muonio VedenkTasoTieto ei sisaltanyt NN/N60-rivia, raaka vastaus: {rows}')
+    return None, False, None
 
 def fetch_syke_series(paikka_id, suure_id, start_dt, end_dt, zero_point_m):
     filt = (
-        f"Paikka_Id eq {paikka_id} and Suure_Id eq {suure_id}"
+        f"Paikka_Id eq {paikka_id}"
         f" and Aika ge datetime'{start_dt:%Y-%m-%d}T00:00:00'"
         f" and Aika le datetime'{end_dt:%Y-%m-%d}T23:59:59'"
     )
@@ -115,10 +120,11 @@ def compute_observed(today, norm_m):
         'doy_ref_n_years': 0, 'sd_nyt': None,
         'data_errors': [],
     }
-    zero_point_m, verified = fetch_zero_point_m(PAIKKA_ID_WL)
+    zero_point_m, verified, height_system = fetch_zero_point_m(PAIKKA_ID_WL)
     result['zero_point_m'], result['zero_point_verified'] = zero_point_m, verified
+    result['height_system'] = height_system
     if zero_point_m is None:
-        result['data_errors'].append('zero_point_m: VedenkTasoTieto ei antanut NN-riviä')
+        result['data_errors'].append('zero_point_m: VedenkTasoTieto ei antanut NN- tai N60-riviä')
         return result  # ei arvausta - kaikki muu jaa None:ksi
 
     recent = fetch_syke_series(PAIKKA_ID_WL, SUURE_ID_WL, today - timedelta(days=14), today, zero_point_m)
@@ -142,7 +148,7 @@ def compute_observed(today, norm_m):
                 result['data_errors'].append(f'spring_peak_m: Vedenkorkeus-haku tyhjä ({spring_start}..{spring_end})')
 
     doy_filt = (
-        f"Paikka_Id eq {PAIKKA_ID_WL} and Suure_Id eq {SUURE_ID_WL}"
+        f"Paikka_Id eq {PAIKKA_ID_WL}"
         f" and month(Aika) eq {today.month} and day(Aika) eq {today.day}"
         f" and year(Aika) ge {DOY_REF_START_YEAR} and year(Aika) le {DOY_REF_END_YEAR}"
     )
