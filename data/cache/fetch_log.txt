@@ -86,36 +86,36 @@ FMI place=Kuopio 10 vuotta (1940-2026)
   2023: +730 riviä (tday=365)
   2024: +732 riviä (tday=366)
   2025: +730 riviä (tday=365)
-  2026: +580 riviä (tday=290)
-FMI Kuopio: 48164 riviä
-OK fmi.json (48164 riviä · Kuopio)
+  2026: +582 riviä (tday=291)
+FMI Kuopio: 48166 riviä
+OK fmi.json (48166 riviä · Kuopio)
 DONE
 wqfi: None m, huippu None
-wlsanafi.html: 231.1 m (30.10.2026)
-wksanafi.html: 231.27 m (28.11.2026)
-wsanafi.html: 232.17 m (24.5.2027)
+wlsanafi.html: 231.06 m (31.10.2026)
+wksanafi.html: 231.24 m (1.12.2026)
+wsanafi.html: 232.18 m (24.5.2027)
 
 SYKE havaintosarja (Paikka_Id 2532):
   Muonio VedenkTasoTieto: N60-nollakohta 230.05 m (Tasokorjaus=23005 cm)
-  observed_m=230.94 (2026-10-18, nollakohta=230.05) sd_kevat=None sd_nyt=0.033
+  observed_m=230.93 (2026-10-19, nollakohta=230.05) sd_kevat=None sd_nyt=0.044
 
 OK muonio.json
 wqfi: None m, huippu None
-wlsanafi.html: huippu 97.54 m (1.11.2026)
-  01.11.: 97.54 m (p25=97.52 p75=97.55)
-  18.11.: 97.61 m (p25=97.57 p75=97.65)
-  18.12.: 97.73 m (p25=97.64 p75=97.83)
-  18.01.: 97.8 m (p25=97.67 p75=97.85)
-wksanafi.html: huippu 97.8 m (14.1.2027)
-  01.11.: 97.54 m (p25=97.52 p75=97.55)
-  18.11.: 97.61 m (p25=97.57 p75=97.65)
-  18.12.: 97.73 m (p25=97.64 p75=97.83)
-  18.01.: 97.8 m (p25=97.67 p75=97.85)
+wlsanafi.html: huippu 97.53 m (2.11.2026)
+  02.11.: 97.53 m (p25=97.52 p75=97.55)
+  19.11.: 97.6 m (p25=97.57 p75=97.64)
+  19.12.: 97.72 m (p25=97.66 p75=97.8)
+  19.01.: 97.77 m (p25=97.7 p75=97.85)
+wksanafi.html: huippu 97.79 m (14.1.2027)
+  02.11.: 97.53 m (p25=97.52 p75=97.55)
+  19.11.: 97.6 m (p25=97.57 p75=97.64)
+  19.12.: 97.72 m (p25=97.66 p75=97.8)
+  19.01.: 97.77 m (p25=97.7 p75=97.85)
 w3sanafi.html: huippu 98.05 m (19.5.2027)
-  01.11.: 97.54 m (p25=97.52 p75=97.55)
-  18.11.: 97.61 m (p25=97.57 p75=97.65)
-  18.12.: 97.73 m (p25=97.64 p75=97.83)
-  18.01.: 97.8 m (p25=97.67 p75=97.85)
+  02.11.: 97.53 m (p25=97.52 p75=97.55)
+  19.11.: 97.6 m (p25=97.57 p75=97.64)
+  19.12.: 97.72 m (p25=97.66 p75=97.8)
+  19.01.: 97.77 m (p25=97.7 p75=97.85)
 
 GraafiSivu-testaus:
   period=100x365: 2184b, wl:0, vuosia:0
@@ -124,7 +124,7 @@ GraafiSivu-testaus:
 
 SYKE havaintosarja (Paikka_Id 1966, Suure_Id 1):
   VedenkTasoTieto: NN-nollakohta 96.88 m (Tasokorjaus=9688 cm, Paikka_Id=1966)
-  observed_m=97.49 (2026-10-18, provisional={'field': 'Lippu_id', 'value': 108, 'description': 'Hetkellisiä arvoja puuttuu'}) spring_peak_m=97.59 sd_kevat=0.467 doy_avg_m=97.57 sd_nyt=0.089 flow_m3s=22.0 flow_doy_median=23.0 rf_flow=0.043
+  observed_m=97.48 (2026-10-19, provisional={'field': 'Lippu_id', 'value': 108, 'description': 'Hetkellisiä arvoja puuttuu'}) spring_peak_m=97.59 sd_kevat=0.467 doy_avg_m=97.57 sd_nyt=0.1 flow_m3s=22.0 flow_doy_median=23.0 rf_flow=0.043
 
 OK iisvesi.json
 Lasketaan 2026-09 .. 2026-09
