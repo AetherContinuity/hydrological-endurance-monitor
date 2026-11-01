@@ -1,10 +1,10 @@
-2026-10-01 09:34:52,102 INFO Request ID is b54e3c2c-fc7d-4d21-ac58-eacb0286290f
-2026-10-01 09:34:52,263 INFO status has been updated to accepted
-2026-10-01 09:35:14,139 INFO status has been updated to running
-2026-10-01 09:35:25,675 INFO status has been updated to failed
-ERA5: 2026-10 → area [63.2, 26.5, 62.5, 27.2]
-ERA5 virhe: 400 Client Error: Bad Request for url: https://cds.climate.copernicus.eu/api/retrieve/v1/jobs/b54e3c2c-fc7d-4d21-ac58-eacb0286290f/results
+2026-11-01 09:52:51,025 INFO [2026-10-06T00:00:00Z] **Data Stores Service protection measures** affecting data downloads and account access: [please read our Announcement](https://forum.ecmwf.int/t/data-stores-service-protection-measures-affecting-data-downloads-and-account-access-cds-ads-ewds-ecds/15481) before enquiring with ECMWF Support.
+2026-11-01 09:52:51,466 INFO Request ID is 64e0df29-1263-4211-9f10-e366ea4c9821
+2026-11-01 09:52:51,636 INFO status has been updated to accepted
+2026-11-01 09:53:05,603 INFO status has been updated to failed
+ERA5: 2026-11 → area [63.2, 26.5, 62.5, 27.2]
+ERA5 virhe: 400 Client Error: Bad Request for url: https://cds.climate.copernicus.eu/api/retrieve/v1/jobs/64e0df29-1263-4211-9f10-e366ea4c9821/results
 The job has failed
-None of the data you have requested is available yet, please revise the period requested. The latest date available for this dataset is: 2026-09-26 09:00
-The job failed with: MultiAdaptorNoDataError
 The 'format' key for requests is deprecated, please use 'data_format' instead. Use of 'format' is no longer part of the system testing, therefore it is not guaranteed to work.
+None of the data you have requested is available yet, please revise the period requested. The latest date available for this dataset is: 2026-10-27 09:00
+The job failed with: MultiAdaptorNoDataError
