@@ -1,13 +1,13 @@
 {
   "source": "SYKE-WSFS",
-  "fetched": "2026-11-07",
+  "fetched": "2026-11-08",
   "forecasts": [],
-  "forecast_central_m": 97.6,
+  "forecast_central_m": 97.61,
   "f14": {
-    "peak_date_mean": "21.11.2026",
-    "peak_wl_mean": 97.6,
-    "peak_p5": 97.57,
-    "peak_p95": 97.64,
+    "peak_date_mean": "22.11.2026",
+    "peak_wl_mean": 97.61,
+    "peak_p5": 97.58,
+    "peak_p95": 97.65,
     "ref_years": "1910-2025",
     "ref_mean_max": 98.01,
     "ref_min_max": 97.36,
@@ -15,48 +15,48 @@
     "mhw_date": "10.06.1988",
     "forecasts": [
       {
-        "label": "Vedenkorkeuden vaihteluvälit Kahden viikon kuluttua, eli 21.11.",
-        "date": "21.11.",
-        "mean": 97.6,
+        "label": "Vedenkorkeuden vaihteluvälit Kahden viikon kuluttua, eli 22.11.",
+        "date": "22.11.",
+        "mean": 97.61,
         "p25": 97.59,
-        "p75": 97.62,
-        "p95": 97.64,
-        "p5": 97.57
+        "p75": 97.63,
+        "p95": 97.65,
+        "p5": 97.58
       },
       {
-        "label": "Kuukauden kuluttua, eli 07.12.",
-        "date": "07.12.",
-        "mean": 97.66,
-        "p25": 97.64,
-        "p75": 97.7,
-        "p95": 97.74,
+        "label": "Kuukauden kuluttua, eli 08.12.",
+        "date": "08.12.",
+        "mean": 97.67,
+        "p25": 97.65,
+        "p75": 97.72,
+        "p95": 97.8,
         "p5": 97.6
       },
       {
-        "label": "Kahden kuukauden kuluttua, eli 07.01.",
-        "date": "07.01.",
-        "mean": 97.72,
+        "label": "Kahden kuukauden kuluttua, eli 08.01.",
+        "date": "08.01.",
+        "mean": 97.74,
         "p25": 97.68,
-        "p75": 97.81,
-        "p95": 97.89,
-        "p5": 97.63
+        "p75": 97.82,
+        "p95": 97.93,
+        "p5": 97.61
       },
       {
-        "label": "Kolmen kuukauden kuluttua, eli 07.02.",
-        "date": "07.02.",
-        "mean": 97.71,
+        "label": "Kolmen kuukauden kuluttua, eli 08.02.",
+        "date": "08.02.",
+        "mean": 97.76,
         "p25": 97.67,
-        "p75": 97.82,
-        "p95": 97.97,
-        "p5": 97.59
+        "p75": 97.85,
+        "p95": 97.95,
+        "p5": 97.61
       }
     ]
   },
   "f90": {
-    "peak_date_mean": "20.1.2027",
-    "peak_wl_mean": 97.75,
+    "peak_date_mean": "17.1.2027",
+    "peak_wl_mean": 97.76,
     "peak_p5": 97.64,
-    "peak_p95": 97.98,
+    "peak_p95": 97.95,
     "ref_years": "1910-2025",
     "ref_mean_max": 98.01,
     "ref_min_max": 97.36,
@@ -64,48 +64,48 @@
     "mhw_date": "10.06.1988",
     "forecasts": [
       {
-        "label": "Vedenkorkeuden vaihteluvälit Kahden viikon kuluttua, eli 21.11.",
-        "date": "21.11.",
-        "mean": 97.6,
+        "label": "Vedenkorkeuden vaihteluvälit Kahden viikon kuluttua, eli 22.11.",
+        "date": "22.11.",
+        "mean": 97.61,
         "p25": 97.59,
-        "p75": 97.62,
-        "p95": 97.64,
-        "p5": 97.57
+        "p75": 97.63,
+        "p95": 97.65,
+        "p5": 97.58
       },
       {
-        "label": "Kuukauden kuluttua, eli 07.12.",
-        "date": "07.12.",
-        "mean": 97.66,
-        "p25": 97.64,
-        "p75": 97.7,
-        "p95": 97.74,
+        "label": "Kuukauden kuluttua, eli 08.12.",
+        "date": "08.12.",
+        "mean": 97.67,
+        "p25": 97.65,
+        "p75": 97.72,
+        "p95": 97.8,
         "p5": 97.6
       },
       {
-        "label": "Kahden kuukauden kuluttua, eli 07.01.",
-        "date": "07.01.",
-        "mean": 97.72,
+        "label": "Kahden kuukauden kuluttua, eli 08.01.",
+        "date": "08.01.",
+        "mean": 97.74,
         "p25": 97.68,
-        "p75": 97.81,
-        "p95": 97.89,
-        "p5": 97.63
+        "p75": 97.82,
+        "p95": 97.93,
+        "p5": 97.61
       },
       {
-        "label": "Kolmen kuukauden kuluttua, eli 07.02.",
-        "date": "07.02.",
-        "mean": 97.71,
+        "label": "Kolmen kuukauden kuluttua, eli 08.02.",
+        "date": "08.02.",
+        "mean": 97.76,
         "p25": 97.67,
-        "p75": 97.82,
-        "p95": 97.97,
-        "p5": 97.59
+        "p75": 97.85,
+        "p95": 97.95,
+        "p5": 97.61
       }
     ]
   },
   "f365": {
     "peak_date_mean": "20.5.2027",
     "peak_wl_mean": 98.01,
-    "peak_p5": 97.7,
-    "peak_p95": 98.33,
+    "peak_p5": 97.73,
+    "peak_p95": 98.31,
     "ref_years": "1910-2025",
     "ref_mean_max": 98.01,
     "ref_min_max": 97.36,
@@ -113,44 +113,44 @@
     "mhw_date": "10.06.1988",
     "forecasts": [
       {
-        "label": "Vedenkorkeuden vaihteluvälit Kahden viikon kuluttua, eli 21.11.",
-        "date": "21.11.",
-        "mean": 97.6,
+        "label": "Vedenkorkeuden vaihteluvälit Kahden viikon kuluttua, eli 22.11.",
+        "date": "22.11.",
+        "mean": 97.61,
         "p25": 97.59,
-        "p75": 97.62,
-        "p95": 97.64,
-        "p5": 97.57
+        "p75": 97.63,
+        "p95": 97.65,
+        "p5": 97.58
       },
       {
-        "label": "Kuukauden kuluttua, eli 07.12.",
-        "date": "07.12.",
-        "mean": 97.66,
-        "p25": 97.64,
-        "p75": 97.7,
-        "p95": 97.74,
+        "label": "Kuukauden kuluttua, eli 08.12.",
+        "date": "08.12.",
+        "mean": 97.67,
+        "p25": 97.65,
+        "p75": 97.72,
+        "p95": 97.8,
         "p5": 97.6
       },
       {
-        "label": "Kahden kuukauden kuluttua, eli 07.01.",
-        "date": "07.01.",
-        "mean": 97.72,
+        "label": "Kahden kuukauden kuluttua, eli 08.01.",
+        "date": "08.01.",
+        "mean": 97.74,
         "p25": 97.68,
-        "p75": 97.81,
-        "p95": 97.89,
-        "p5": 97.63
+        "p75": 97.82,
+        "p95": 97.93,
+        "p5": 97.61
       },
       {
-        "label": "Kolmen kuukauden kuluttua, eli 07.02.",
-        "date": "07.02.",
-        "mean": 97.71,
+        "label": "Kolmen kuukauden kuluttua, eli 08.02.",
+        "date": "08.02.",
+        "mean": 97.76,
         "p25": 97.67,
-        "p75": 97.82,
-        "p95": 97.97,
-        "p5": 97.59
+        "p75": 97.85,
+        "p95": 97.95,
+        "p5": 97.61
       }
     ]
   },
-  "peak_date_mean": "21.11.2026",
+  "peak_date_mean": "22.11.2026",
   "ref_mean_max": 98.01,
   "ref_min_max": 97.36,
   "mhw_m": 98.46,
@@ -159,7 +159,7 @@
     "zero_point_m": 96.88,
     "zero_point_verified": true,
     "observed_m": 97.55,
-    "observed_date": "2026-11-07",
+    "observed_date": "2026-11-08",
     "observed_provisional": {
       "field": "Lippu_id",
       "value": 108,
@@ -171,8 +171,8 @@
     "doy_avg_m": 97.58,
     "doy_ref_years": "1991-2020",
     "sd_nyt": 0.033,
-    "flow_m3s": 25.0,
-    "flow_date": "2026-11-07",
+    "flow_m3s": 24.6,
+    "flow_date": "2026-11-08",
     "flow_doy_median_m3s": 24.0,
     "flow_doy_n_years": 33,
     "rf_flow": 0,
